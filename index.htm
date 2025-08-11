@@ -515,6 +515,41 @@
             width: 90%;
           }
         }
+
+        /* Pagination Styles */
+        .pagination {
+          display: flex;
+          justify-content: center;
+          margin-top: 30px;
+          gap: 10px;
+        }
+
+        .pagination button {
+          background-color: #002b5b;
+          color: white;
+          border: none;
+          padding: 10px 15px;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+
+        .pagination button:hover {
+          background-color: #004080;
+        }
+
+        .pagination button.active {
+          background-color: #764ba2;
+        }
+
+        .pagination button:disabled {
+          background-color: #ccc;
+          cursor: not-allowed;
+        }
+
+        .card.hidden {
+          display: none;
+        }
       </style>
 
       <h1>Jadwal Kegiatan</h1>
@@ -542,7 +577,7 @@
           alt=""
         />
       </div>
-      <div class="card-container">
+      <div class="card-container" id="card-container">
         <div class="card">
           <div class="card-image">
             <img src="/Rectangle 52.png" alt="Festival Tari Hardiknas" />
@@ -629,6 +664,10 @@
             <button class="btn-beli">Beli Tiket</button>
           </div>
         </div>
+      </div>
+      <div class="pagination" id="pagination">
+        <button id="prev-btn" disabled>Previous</button>
+        <button id="next-btn">Next</button>
       </div>
       <button>Lihat Semua Tiket</button>
     </div>
@@ -1101,6 +1140,314 @@
         observer.observe(document.querySelector('.galeri-wrapper'));
     </script>
 
+
+<section class="faq-section">
+  <h2>FAQ</h2>
+  <div class="faq-item">
+    <button class="faq-question">
+      Apakah Festival Enem Bisa digunakan untuk Umum?
+    </button>
+    <div class="faq-answer">
+      Ya, Festival Enem terbuka untuk umum selama mematuhi syarat dan ketentuan yang berlaku.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">
+      Bagaimana Cara Menggunakan Tiket di Festival Enem?
+    </button>
+    <div class="faq-answer">
+      Cukup tunjukkan tiket digital atau cetak di pintu masuk, kemudian petugas akan memindai QR code.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <button class="faq-question">
+      Dimana saya bisa membeli tiket Festival Enem?
+    </button>
+    <div class="faq-answer">
+      Tiket bisa dibeli di website resmi Festival Enem atau melalui mitra penjualan tiket resmi.
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-section {
+    height: 100dvh;
+    height: 100vh;
+    padding: 50px 20px;
+    position: relative;
+    text-align: center;
+    background: url('/1\ \(1\)\ copy.png');
+    color: white;
+  }
+
+  .faq-section h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+  }
+
+  .faq-section h2::after {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 3px;
+    background: white;
+    margin: 5px auto 0;
+    border-radius: 2px;
+  }
+
+  .faq-item {
+    max-width: 700px;
+    margin: 10px auto;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: left;
+  }
+
+  .faq-question {
+    background: none;
+    border: none;
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: #333;
+  }
+
+  .arrow {
+    transition: transform 0.3s ease;
+    font-size: 1rem;
+    margin-left: 10px;
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 20px;
+    background: #f9f9f9;
+    font-size: 0.95rem;
+    color: #555;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+
+  .faq-item.active .faq-answer {
+    max-height: 200px;
+    padding: 15px 20px;
+  }
+
+  .faq-item.active .arrow {
+    transform: rotate(180deg);
+  }
+</style>
+
+<section class="event-section">
+  <div class="overlay">
+    <h1>Siap Mengikuti Event Lainnya?</h1>
+    <p>Temukan Festival dan tiket lainnya di Festival Enem</p>
+    <div class="btn-group">
+      <a href="#" class="btn btn-light">Beli Tiket</a>
+      <a href="#" class="btn btn-dark">Lihat Event Lainnya</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .event-section {
+    position: relative;
+    background: url('/1\ \(2\)\ copy.png') center/cover no-repeat;
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .overlay {
+    text-align: center;
+    color: white;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+
+  .overlay h1 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .overlay p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: background 0.3s ease;
+  }
+
+  .btn-light {
+    background: #d6b7ff;
+    color: #000;
+  }
+
+  .btn-dark {
+    background: #6c3bff;
+    color: white;
+  }
+
+  .btn-light:hover {
+    background: #c69aff;
+  }
+
+  .btn-dark:hover {
+    background: #5a2de0;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.faq-question').forEach(button => {
+    button.addEventListener('click', () => {
+      const item = button.parentElement;
+      item.classList.toggle('active');
+    });
+  });
+</script>
+
+<footer class="footer">
+  <div class="footer-container">
+    <!-- Tautan Cepat -->
+    <div class="footer-col">
+      <h3>Tautan Cepat</h3>
+      <div class="footer-links">
+        <a href="#">Beranda</a>
+        <a href="#">Tentang</a>
+        <a href="#">Event</a>
+        <a href="#">Kontak</a>
+      </div>
+    </div>
+
+    <!-- Alamat -->
+    <div class="footer-col">
+      <h3>Alamat</h3>
+      <p>JL. PB. SUDIRMAN NO. 114 TANGGUL–JEMBER,<br>
+         Tanggul Kulon, Kec. Tanggul, Kab. Jember<br>
+         Prov. Jawa Timur</p>
+      <p>📧 eventenem@smkn6jember.sch.id</p>
+      <p>📞 +123 445 789</p>
+    </div>
+
+    <!-- Follow Us -->
+    <div class="footer-col">
+      <h3>Follow Us</h3>
+      <div class="social-icons">
+        <a href="#"><img src="icon-instagram.png" alt="Instagram"></a>
+        <a href="#"><img src="icon-facebook.png" alt="Facebook"></a>
+        <a href="#"><img src="icon-tiktok.png" alt="TikTok"></a>
+        <a href="#"><img src="icon-youtube.png" alt="YouTube"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Event Enem All Rights Reserved</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: #1e1e1e;
+    color: white;
+    padding: 40px 20px 10px;
+    font-family: Arial, sans-serif;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .footer-col {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .footer-col h3 {
+    margin-bottom: 10px;
+    position: relative;
+    font-weight: bold;
+  }
+
+  .footer-col h3::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: #7b5cff;
+    margin-top: 5px;
+  }
+
+  /* Kolom Tautan Cepat */
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .footer-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover {
+    color: #7b5cff;
+  }
+
+  /* Sosial Media */
+  .social-icons a img {
+    width: 24px;
+    margin-right: 10px;
+    transition: opacity 0.3s;
+  }
+
+  .social-icons a img:hover {
+    opacity: 0.7;
+  }
+
+  /* Bawah Footer */
+  .footer-bottom {
+    border-top: 1px solid #444;
+    text-align: center;
+    padding-top: 10px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #ccc;
+  }
+</style>
+
     <script>
       document
         .getElementById("menu-toggle")
@@ -1151,6 +1498,63 @@
       targetDate.setSeconds(targetDate.getSeconds() + 39);
 
       startCountdown(targetDate.getTime());
+
+      // Pagination Script
+      const cardss = document.querySelectorAll('#card-container .card');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const pagination = document.getElementById('pagination');
+      const itemsPerPage = 3; // 3 card per halaman untuk ringan
+      const totalPages = Math.ceil(cards.length / itemsPerPage);
+      let currentPage = 1;
+
+      function showPage(page) {
+        cardss.forEach((card, index) => {
+          if (index >= (page - 1) * itemsPerPage && index < page * itemsPerPage) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        prevBtn.disabled = page === 1;
+        nextBtn.disabled = page === totalPages;
+
+        document.querySelectorAll('.pagination button.page-btn').forEach(btn => {
+          btn.classList.remove('active');
+          if (parseInt(btn.textContent) === page) {
+            btn.classList.add('active');
+          }
+        });
+      }
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.classList.add('page-btn');
+        pageBtn.addEventListener('click', () => {
+          currentPage = i;
+          showPage(currentPage);
+        });
+        pagination.insertBefore(pageBtn, nextBtn);
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          showPage(currentPage);
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          showPage(currentPage);
+        }
+      });
+
+      cards.forEach(card => card.classList.add('hidden'));
+      showPage(currentPage);
     </script>
   </body>
 </html>
