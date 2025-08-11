@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        text-decoration: none;
+        list-style: none;
+        font-family: Poppins, sans-serif;
+      }
+      body{
+        overflow-x: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <style>
+        nav {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.5em 7%;
+          background-color: #6d676473;
+          position: fixed;
+          left: 0;
+          right: 0;
+          top: 0;
+          z-index: 1000;
+        }
+
+        ul {
+          display: flex;
+          gap: 20px;
+          align-items: center;
+        }
+
+        nav ul li a {
+          color: rgb(255, 255, 255);
+          font-weight: bold;
+          font-weight: 500;
+          transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+          color: #007bff;
+        }
+
+        nav ul li input {
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+
+        nav ul li input:focus {
+          outline: none;
+          border-color: #007bff;
+        }
+
+        .menu-toggle {
+          display: none;
+          font-size: 24px;
+          cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+          ul {
+            flex-direction: column;
+            gap: 15px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100vh;
+            background-color: #6d676473;
+            padding: 20px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+          }
+
+          ul.show {
+            left: 0;
+          }
+
+          .menu-toggle {
+            display: block;
+          }
+        }
+      </style>
+      <div class="logo">
+        <img src="/img/logo.png" alt="" width="40" />
+      </div>
+      <div class="menu-toggle" id="menu-toggle">☰</div>
+      <ul id="menu">
+        <li><a href="">Beranda</a></li>
+        <li><a href="">Tentang</a></li>
+        <li><a href="">Event</a></li>
+        <li><a href="">Informasi</a></li>
+        <li><input type="text" placeholder="Cari..." /></li>
+      </ul>
+    </nav>
+
+    <header>
+      <style>
+        header {
+          padding: 20px;
+          text-align: center;
+          background: url(/img/home.png) center center / cover no-repeat;
+          height: 100dvh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: white;
+          position: relative;
+        }
+
+        .header-content {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          max-width: 600px;
+          align-items: center; /* buat tombol & teks center */
+          text-align: center; /* teks h1 & p rata tengah */
+        }
+
+        header h1 {
+          font-size: 2rem;
+          margin: 0;
+        }
+
+        header p {
+          font-size: 1.2rem;
+          margin: 0;
+        }
+
+        .timer {
+          position: absolute;
+          bottom: -25px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: linear-gradient(to bottom, #667eeab6, #764ba2a9);
+          color: white;
+          font-weight: bold;
+          padding: 10px 20px;
+          border-radius: 12px;
+          font-size: 1.5rem;
+          display: flex;
+          gap: 10px;
+          z-index: 10;
+          align-items: center;
+        }
+
+        .dekorasi-kiri {
+          position: absolute;
+          left: 0;
+          bottom: -107px;
+          z-index: 5;
+        }
+
+        .dekorasi-kiri img {
+          max-width: 150px;
+        }
+
+        .dekorasi-kanan {
+          position: absolute;
+          right: 0;
+          bottom: -271px;
+          z-index: 10;
+        }
+
+        .dekorasi-kanan img {
+          display: block;
+          max-width: 150px;
+          height: auto;
+        }
+
+        button {
+          background-color: #002b5b;
+          color: white;
+          border: none;
+          border-radius: 15px;
+          padding: 10px 20px;
+          font-size: 1rem;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          width: auto;
+        }
+
+        button:hover {
+          background-color: #004080;
+        }
+
+        /* Desktop */
+        @media (min-width: 1024px) {
+          .timer {
+            bottom: -40px;
+            padding: 15px 40px;
+            font-size: 2rem;
+            border-radius: 16px;
+            gap: 15px;
+          }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+          header h1 {
+            font-size: 1.5rem;
+          }
+          header p {
+            font-size: 1rem;
+          }
+        }
+      </style>
+
+      <div class="dekorasi-kanan">
+        <img src="/Rectangle 4027.png" alt="" />
+      </div>
+
+      <div class="dekorasi-kiri">
+        <img src="/Rectangle 4028.png" alt="" />
+      </div>
+
+      <div class="header-content">
+        <h1>Lestarikan Budaya <br />Indonesia dengan Festival Enem</h1>
+        <p>
+          Budaya Asing keren? eitss... Budaya <br />Indonesia jauh lebih keren
+          ga <br />percaya?, yuk ikutan!!
+        </p>
+        <button>Jelajahi Tiket</button>
+      </div>
+
+      <div class="timer" id="timer"></div>
+    </header>
+
+    <div class="tentang">
+      <style>
+        .tentang {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px; /* jarak sangat kecil biar berdekatan */
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 100px 20px;
+        }
+
+        .bungkus-kiri {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          z-index: 10;
+          align-items: flex-start; /* teks rata kiri */
+          max-width: 500px;
+        }
+
+        .bungkus-kiri h2 {
+          font-size: 2.2rem;
+          margin-bottom: 15px;
+          color: #002b5b;
+          font-weight: 700;
+          line-height: 1.3;
+          position: relative;
+          display: inline-block;
+        }
+
+        .bungkus-kiri h2::after {
+          content: "";
+          position: absolute;
+          bottom: -5px;
+          left: 0;
+          width: 100%;
+          display: inline-block;
+          height: 4px;
+          background-color: #002b5b;
+          border-radius: 2px;
+        }
+
+        .bungkus-kiri p {
+          font-size: 1rem;
+          line-height: 1.6;
+          color: #333;
+          margin-top: 20px;
+        }
+
+        .image-kanan {
+          flex: 0 0 auto; /* agar ukuran sesuai gambar */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .image-kanan img {
+          max-width: 250px;
+          height: auto;
+          display: block;
+        }
+
+        @media (max-width: 768px) {
+          .tentang {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .bungkus-kiri {
+            align-items: center;
+            max-width: 100%;
+          }
+
+          .bungkus-kiri h2::after {
+            left: 50%;
+            transform: translateX(-50%);
+          }
+
+          .image-kanan {
+            margin-top: 20px;
+            justify-content: center;
+          }
+        }
+      </style>
+
+      <div class="bungkus-kiri">
+        <h2>
+          Selamat Datang <br />
+          Di Festival Enem
+        </h2>
+        <p>
+          Event Enem adalah Sebuah Platform berbasis Website yang berfungsi
+          untuk menyampaikan Informasi tentang kegiatan kesenian di SMKN 6
+          Jember dengan adanya Event Enem Kegiatan Seni di Sekolah dapat dikenal
+          luas oleh siswa.
+        </p>
+      </div>
+
+      <div class="image-kanan">
+        <img src="/Batiknya Indonesia (13) 1.png" alt="Logo Festival Enem" />
+      </div>
+    </div>
+
+<div class="jadwal-event">
+  <style>
+    .jadwal-event {
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+        z-index: 1;
+    }
+
+    .kiri-atas, .kiri-bawah, .kanan-atas, .kanan-bawah {
+  position: absolute;
+  z-index: -1;
+}
+.kiri-atas {
+  top: 0px;
+  left: -200px;
+}
+
+.kiri-bawah {
+  bottom: 80px;
+  left: -60px;
+}
+
+.kanan-atas {
+  top: 100px;
+  right: -90px;
+}
+
+.kanan-bawah {
+  bottom: 0;
+  right: -250px;
+}
+
+.kiri-atas img,
+.kiri-bawah img,
+.kanan-atas img,
+.kanan-bawah img {
+  width: 250px;
+  height: auto;
+  opacity: 0.6;
+  pointer-events: none;
+}
+    .jadwal-event h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #333;
+      position: relative;
+    }
+
+    .jadwal-event h1::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background-color: #333;
+      border-radius: 2px;
+    }
+
+    .card-container {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .jadwal-event button {
+      display: block;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .card {
+      width: 300px;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-image {
+      position: relative;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .date-badge {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background-color: rgba(0,0,0,0.6);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .date-badge i {
+      font-size: 1rem;
+    }
+
+    .card-content {
+      background: linear-gradient(to right, #764ba2, #667eea);
+      color: white;
+      padding: 15px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-content h3 {
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    .card-content p {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      margin: 0;
+      flex: 1;
+    }
+
+    .btn-beli {
+      background-color: white;
+      color: #764ba2;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-beli:hover {
+      background-color: #f2f2f2;
+    }
+
+    @media (max-width: 768px) {
+      .card-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card {
+        width: 90%;
+      }
+    }
+  </style>
+
+  <h1>Jadwal Kegiatan</h1>
+<div class="kiri-atas">
+    <img src="/Screenshot_2025-08-11_150134-removebg-preview 1.png" alt="">
+</div>
+<div class="kiri-bawah">
+    <img src="/Screenshot_2025-08-11_150134-removebg-preview 3.png" alt="">
+</div>
+<div class="kanan-atas">
+    <img src="/Screenshot_2025-08-11_150134-removebg-preview 3.png" alt="">
+</div>
+<div class="kanan-bawah">
+    <img src="/Screenshot_2025-08-11_150134-removebg-preview 1.png" alt="">
+</div>
+  <div class="card-container">
+    <div class="card">
+      <div class="card-image">
+        <img src="/Rectangle 52.png" alt="Festival Tari Hardiknas">
+        <div class="date-badge">
+          <i>📅</i> 21 Juli 2025
+        </div>
+      </div>
+      <div class="card-content">
+        <h3>Festival Tari Hardiknas</h3>
+        <p>Pementasan Tari oleh Maheswara SMKN 6 Jember dalam rangka Hardiknas</p>
+        <button class="btn-beli">Beli Tiket</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image">
+        <img src="/Rectangle 52-1.png" alt="Festival Budaya">
+        <div class="date-badge">
+          <i>📅</i> 29 Juli 2025
+        </div>
+      </div>
+      <div class="card-content">
+        <h3>Festival Budaya</h3>
+        <p>Festival budaya diadakan di sekolah untuk memperingati Hari Kemerdekaan</p>
+        <button class="btn-beli">Beli Tiket</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-image">
+        <img src="/Rectangle 51.png" alt="Seni Tradisional">
+        <div class="date-badge">
+          <i>📅</i> 30 Juli 2025
+        </div>
+      </div>
+      <div class="card-content">
+        <h3>Seni Tradisional</h3>
+        <p>Festival seni tradisional untuk memeriahkan acara kemerdekaan di sekolah</p>
+        <button class="btn-beli">Beli Tiket</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-image">
+        <img src="/Rectangle 43.png" alt="Seni Tradisional">
+        <div class="date-badge">
+          <i>📅</i> 30 Juli 2025
+        </div>
+      </div>
+      <div class="card-content">
+        <h3>Seni Tradisional</h3>
+        <p>Festival seni tradisional untuk memeriahkan acara kemerdekaan di sekolah</p>
+        <button class="btn-beli">Beli Tiket</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-image">
+        <img src="/Rectangle 74.png" alt="Seni Tradisional">
+        <div class="date-badge">
+          <i>📅</i> 30 Juli 2025
+        </div>
+      </div>
+      <div class="card-content">
+        <h3>Seni Tradisional</h3>
+        <p>Festival seni tradisional untuk memeriahkan acara kemerdekaan di sekolah</p>
+        <button class="btn-beli">Beli Tiket</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-image">
+        <img src="/Rectangle 124.png" alt="Seni Tradisional">
+        <div class="date-badge">
+          <i>📅</i> 30 Juli 2025
+        </div>
+      </div>
+      <div class="card-content">
+        <h3>Seni Tradisional</h3>
+        <p>Festival seni tradisional untuk memeriahkan acara kemerdekaan di sekolah</p>
+        <button class="btn-beli">Beli Tiket</button>
+      </div>
+    </div>
+  </div>
+  <button>Lihat Semua Tiket</button>
+</div>
+
+
+
+
+    <script>
+      document
+        .getElementById("menu-toggle")
+        .addEventListener("click", function () {
+          document.getElementById("menu").classList.toggle("show");
+        });
+
+      function startCountdown(endTime) {
+        const timerEl = document.getElementById("timer");
+
+        function updateTimer() {
+          const now = new Date().getTime();
+          const distance = endTime - now;
+
+          if (distance <= 0) {
+            timerEl.textContent = "00 : 00 : 00 : 00";
+            clearInterval(interval);
+            return;
+          }
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor(
+            (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const minutes = Math.floor(
+            (distance % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          timerEl.textContent = `${days} : ${String(hours).padStart(
+            2,
+            "0"
+          )} : ${String(minutes).padStart(2, "0")} : ${String(seconds).padStart(
+            2,
+            "0"
+          )}`;
+        }
+
+        updateTimer();
+        const interval = setInterval(updateTimer, 1000);
+      }
+
+      // Contoh: hitung mundur 264 hari, 13 jam, 34 menit, 39 detik dari sekarang
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() + 0);
+      targetDate.setHours(targetDate.getHours() + 0);
+      targetDate.setMinutes(targetDate.getMinutes() + 34);
+      targetDate.setSeconds(targetDate.getSeconds() + 39);
+
+      startCountdown(targetDate.getTime());
+    </script>
+  </body>
+</html>
