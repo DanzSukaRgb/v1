@@ -1,0 +1,124 @@
+<!-- invoice.html — Nota/Invoice -->
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invoice</title>
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1f2330;--muted:#6b7280;--line:#e9eaf0;--primary:#8f67e8}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto}
+  .container{max-width:980px;margin:0 auto;padding:16px}
+  header{background:linear-gradient(90deg,#8a63d2,#b07cfb);color:#fff}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+  .brand{display:flex;gap:10px;align-items:center;font-weight:800}
+  .brand-badge{width:28px;height:28px;border-radius:8px;background:#fff;color:#8a63d2;display:grid;place-items:center;font-weight:900}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;box-shadow:0 2px 22px rgba(0,0,0,.05)}
+  .row{display:flex;justify-content:space-between;gap:16px}
+  .muted{color:var(--muted)}
+  .table{width:100%;border-collapse:collapse;margin-top:10px}
+  .table th,.table td{font-size:14px;padding:10px;border-bottom:1px solid var(--line);text-align:left}
+  .right{text-align:right}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+  .btn.primary{background:var(--primary);border-color:transparent;color:#fff}
+  .headerBox{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+  .qr{width:140px;height:140px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  @media print{
+    header,.actions{display:none}
+    body{background:#fff}
+    .container{max-width:100%;padding:0}
+    .card{box-shadow:none;border:none}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="nav container">
+    <div class="brand"><div class="brand-badge">E</div> EPIM 2025</div>
+    <div>Invoice</div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <div class="headerBox">
+      <div>
+        <h3 style="margin:0 0 6px 0">INVOICE</h3>
+        <div class="muted" id="addr">Jl. Jendral Sudirman No. 114, Tanggul — Jember • Jawa Timur</div>
+        <div class="muted">Tanggal: <span id="dateNow"></span></div>
+        <div>No: <strong id="invId"></strong></div>
+        <div>Kasir: Administrator</div>
+      </div>
+      <canvas id="qr" class="qr" width="280" height="280" aria-label="QR Invoice"></canvas>
+    </div>
+
+    <table class="table" aria-label="Rincian item">
+      <thead>
+        <tr><th>No</th><th>Nama</th><th>Jumlah</th><th class="right">Harga</th><th class="right">Subtotal</th></tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot>
+        <tr><td colspan="4" class="right">Local Tax</td><td class="right" id="taxCell">Rp 0</td></tr>
+        <tr><td colspan="4" class="right">Biaya Platform</td><td class="right" id="feeCell">Rp 0</td></tr>
+        <tr><td colspan="4" class="right"><strong>Total Keseluruhan</strong></td><td class="right" id="totalCell"><strong>Rp 0</strong></td></tr>
+      </tfoot>
+    </table>
+
+    <div class="row" style="margin-top:8px">
+      <div class="muted">Event: <strong id="eventName"></strong> • <span id="eventDate"></span></div>
+      <div class="muted">Metode: <strong id="method"></strong></div>
+    </div>
+
+    <div class="actions" style="margin-top:12px;display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn" id="backPay">Kembali ke Pembayaran</button>
+      <button class="btn primary" onclick="window.print()">Cetak / Simpan PDF</button>
+    </div>
+  </section>
+</main>
+
+<script>
+  const rupiah = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n).replace(",00","");
+  const order = JSON.parse(localStorage.getItem('order')||'null');
+  if(!order){ location.href='pay.html'; }
+  document.getElementById('dateNow').textContent = new Date().toLocaleDateString('id-ID');
+  document.getElementById('invId').textContent = order.id;
+  document.getElementById('eventName').textContent = order.event;
+  document.getElementById('eventDate').textContent = order.date;
+  document.getElementById('method').textContent = order.method;
+
+  const tb=document.getElementById('tbody');
+  let subtotal=0;
+  tb.innerHTML = order.items.map((it,i)=>{
+    const sub=it.qty*it.price; subtotal+=sub;
+    return `<tr><td>${i+1}</td><td>${it.name}</td><td>${it.qty}</td><td class="right">${rupiah(it.price)}</td><td class="right">${rupiah(sub)}</td></tr>`;
+  }).join('');
+  const total=subtotal+order.tax+order.fee;
+  document.getElementById('taxCell').textContent = rupiah(order.tax);
+  document.getElementById('feeCell').textContent = rupiah(order.fee);
+  document.getElementById('totalCell').textContent = rupiah(total);
+
+  // Draw QR
+  function drawFakeQR(canvas, seedStr){
+    const ctx=canvas.getContext('2d'); const size=canvas.width;
+    ctx.clearRect(0,0,size,size); ctx.fillStyle='#fff'; ctx.fillRect(0,0,size,size);
+    let h=2166136261>>>0; for(let i=0;i<seedStr.length;i++){ h^=seedStr.charCodeAt(i); h=Math.imul(h,16777619); }
+    let s=h>>>0; const rand=()=> (s=(s*1664525+1013904223)>>>0)/0x100000000;
+    const modules=33; const cell=Math.floor(size/modules); const off=Math.floor((size-cell*modules)/2);
+    function finder(ix,iy){ const x=off+ix*cell,y=off+iy*cell;
+      const c=canvas.getContext('2d'); c.fillStyle='#000'; c.fillRect(x,y,7*cell,7*cell);
+      c.fillStyle='#fff'; c.fillRect(x+cell,y+cell,5*cell,5*cell);
+      c.fillStyle='#000'; c.fillRect(x+2*cell,y+2*cell,3*cell,3*cell);
+    }
+    finder(2,2); finder(modules-9,2); finder(2,modules-9);
+    for(let r=0;r<modules;r++){ for(let c=0;c<modules;c++){
+      const inFinder=(r>=2&&r<9&&c>=2&&c<9)||(r>=2&&r<9&&c>=modules-9&&c<modules-2)||(r>=modules-9&&r<modules-2&&c>=2&&c<9);
+      const quiet=(r<1||c<1||r>=modules-1||c>=modules-1);
+      if(inFinder||quiet) continue; if(rand()<0.45) ctx.fillRect(off+c*cell, off+r*cell, cell, cell);
+    }}
+  }
+  drawFakeQR(document.getElementById('qr'), order.id+'-'+order.method);
+
+  document.getElementById('backPay').onclick=()=>location.href='pay.html';
+</script>
+</body>
+</html>

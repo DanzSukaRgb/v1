@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Daftar - Festival Enem</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        color: #0f172a;
+      }
+      .card {
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      }
+      .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+      .brand img { width: 36px; height: 36px; }
+      h1 { font-size: 1.4rem; margin: 6px 0 2px; }
+      p.sub { margin: 0 0 18px; color: #475569; font-size: .95rem; }
+      label { display: block; font-size: .9rem; margin-bottom: 6px; color: #334155; }
+      input {
+        width: 100%; padding: 12px 12px; border: 1px solid #d1d5db; border-radius: 10px;
+        font-size: .95rem; margin-bottom: 12px;
+      }
+      button.primary {
+        width: 100%; background: #002b5b; color: #fff; border: 0; border-radius: 10px;
+        padding: 12px 14px; font-weight: 700; cursor: pointer;
+      }
+      button.primary:hover { background: #004080; }
+      .alt { margin-top: 14px; text-align: center; color: #475569; font-size: .95rem; }
+      a.link { color: #6c3bff; font-weight: 700; text-decoration: none; }
+      .top-links { position: fixed; top: 12px; left: 12px; }
+      .back { color: #fff; text-decoration: none; background: #00000030; padding: 6px 10px; border-radius: 8px; }
+    </style>
+  </head>
+  <body>
+    <a class="back top-links" href="index.html">← Kembali</a>
+    <div class="card">
+      <div class="brand">
+        <img src="/img/logo.png" alt="Logo" />
+        <strong>Festival Enem</strong>
+      </div>
+      <h1>Daftar</h1>
+      <p class="sub">Ini hanya simulasi. Isi data lalu klik Daftar.</p>
+
+      <form id="registerForm">
+        <label for="name">Nama Lengkap</label>
+        <input id="name" name="name" type="text" placeholder="Nama kamu"/>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="nama@contoh.com"  />
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••"  />
+        <button class="primary" type="submit">Daftar</button>
+      </form>
+
+      <p class="alt">
+        Sudah punya akun?
+        <a class="link" href="login.html">Masuk</a>
+      </p>
+    </div>
+
+    <script>
+      const AUTH_KEY = "fe_loggedIn";
+      const NAME_KEY = "fe_userName";
+
+      document.getElementById("registerForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        const name = (document.getElementById("name").value || "Pengguna Baru").trim();
+        localStorage.setItem(AUTH_KEY, "true");
+        localStorage.setItem(NAME_KEY, name);
+        window.location.href = "index.html";
+      });
+    </script>
+  </body>
+</html>

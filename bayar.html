@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout Tiket</title>
+  <style>
+    :root{
+      --bg:#f7f7fb;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --card:#ffffff;
+      --primary:#7c3aed;
+      --primary-2:#5b21b6;
+      --accent:#a78bfa;
+      --success:#16a34a;
+      --radius:16px;
+      --shadow:0 10px 30px rgba(16,24,40,.08), 0 2px 6px rgba(16,24,40,.06);
+      --gradient: linear-gradient(90deg, var(--primary), var(--primary-2));
+      --soft-gradient: linear-gradient(145deg, rgba(124,58,237,.08), rgba(91,33,182,.08));
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;background:var(--bg);color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+      line-height:1.55;
+    }
+    .container{
+      width:min(1160px, 92vw);
+      margin-inline:auto;
+      padding-bottom:80px;
+    }
+
+    /* Header bar */
+    .bar{
+      height:70px;border-radius:0 0 16px 16px;
+      background:var(--gradient);
+      box-shadow:0 10px 22px rgba(124,58,237,.25) inset;
+      margin-bottom:20px;
+    }
+
+    /* Grid layout */
+    .grid{
+      display:grid;
+      grid-template-columns: 1.25fr .85fr;
+      gap:22px;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .section{
+      padding:18px 18px 22px;
+    }
+    .section h2{
+      margin:0 0 8px;font-size:20px;font-weight:900
+    }
+    .subtle{color:var(--muted);font-size:14px}
+    .divider{height:1px;background:#f1f5f9;margin:10px 0}
+
+    /* Form */
+    form .field{margin:12px 0}
+    label{
+      display:block;font-weight:800;font-size:14px;margin-bottom:8px;color:#0b1220
+    }
+    .req::after{content:"*";color:#ef4444;margin-left:4px}
+    input[type="text"], input[type="email"], input[type="tel"], textarea{
+      width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+      background:#fafafa;outline:none;transition:.15s ease;font-size:14px
+    }
+    input:focus, textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(167,139,250,.25)}
+    textarea{min-height:110px;resize:vertical}
+
+    .radios{display:flex;gap:16px;align-items:center}
+    .radio{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      border:1px solid var(--border);background:#fff;cursor:pointer;font-weight:700;color:#374151
+    }
+    .radio input{accent-color:var(--primary)}
+    .actions{
+      display:flex;gap:12px;justify-content:flex-end;margin-top:18px
+    }
+    .btn{
+      appearance:none;border:0;cursor:pointer;border-radius:12px;
+      padding:12px 18px;font-weight:900
+    }
+    .btn.ghost{background:#fff;border:1px solid var(--border)}
+    .btn.primary{background:var(--gradient);color:#fff;box-shadow:0 8px 18px rgba(124,58,237,.35)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+
+    /* Right summary */
+    .summary .item{
+      display:flex;gap:12px;align-items:flex-start
+    }
+    .icon{
+      width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+      background:#f3f4f6;border:1px solid var(--border)
+    }
+    .kvs{display:grid;gap:6px}
+    .kvs h3{margin:0;font-size:16px}
+    .row{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;background:#f3f4f6;border:1px solid var(--border);
+      color:#334155;font-weight:700;font-size:12px
+    }
+    .totalRow{
+      display:flex;justify-content:space-between;align-items:center;margin-top:8px;
+      font-weight:900
+    }
+
+    /* Step 2: Methods */
+    .methods .option{
+      display:flex;align-items:center;gap:12px;
+      padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:#fff;
+      cursor:pointer;
+    }
+    .methods .option + .option{margin-top:12px}
+    .methods .option.active{outline:2px solid var(--accent);box-shadow:0 0 0 4px rgba(167,139,250,.2)}
+    .methods .option .left{display:flex;align-items:center;gap:10px}
+    .badge{
+      width:34px;height:34px;border-radius:8px;background:var(--soft-gradient);
+      display:grid;place-items:center;border:1px solid rgba(124,58,237,.2)
+    }
+    .methods .title{font-weight:900}
+    .check{
+      margin-left:auto;width:22px;height:22px;border-radius:999px;border:2px solid var(--accent);
+      display:grid;place-items:center;color:#fff;background:#fff
+    }
+    .option.active .check{background:var(--accent);color:#fff}
+    .info{
+      margin-top:12px;border:1px solid var(--border);border-radius:12px;background:#fff;
+      padding:12px
+    }
+
+    /* Breakdown */
+    .breakdown .row{padding:6px 0;color:#374151}
+    .breakdown .total{
+      margin-top:8px;padding-top:10px;border-top:2px dashed #e2e8f0;
+      display:flex;justify-content:space-between;align-items:center;font-weight:900
+    }
+
+    /* Utility */
+    .header-title{
+      width:min(1160px, 92vw);margin:16px auto 8px;color:#fff;font-weight:900;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .stepper{
+      display:flex;gap:6px;align-items:center;color:#e9d5ff;font-weight:800
+    }
+    .dot{width:8px;height:8px;border-radius:999px;background:#e9d5ff;opacity:.6}
+    .dot.on{opacity:1;background:#fff}
+  </style>
+</head>
+<body>
+  <div class="bar"></div>
+  <div class="header-title">
+    <div class="stepper" id="stepper">
+      <span>Checkout</span>
+      <span class="dot on"></span>
+      <span>Form Pembelian</span>
+      <span class="dot"></span>
+      <span>Metode Pembayaran</span>
+    </div>
+    <a href="index.html" onclick="if(history.length>1){history.back();return false;}" style="color:#fff;text-decoration:none;font-weight:900">← Kembali</a>
+  </div>
+
+  <div class="container">
+    <div class="grid">
+      <!-- LEFT: Step 1 (Form) -->
+      <div id="step1" class="card section">
+        <h2>Form Pembelian</h2>
+        <div class="divider"></div>
+        <form id="buyerForm" novalidate>
+          <div class="field">
+            <label class="req">Nama</label>
+            <input id="name" type="text" placeholder="User" required>
+          </div>
+          <div class="field">
+            <label class="req">Email</label>
+            <input id="email" type="email" placeholder="user@gmail.com" required>
+          </div>
+          <div class="field">
+            <label class="req">No Telepon</label>
+            <input id="phone" type="tel" placeholder="1234567890" pattern="[0-9+ ]{8,}" required>
+          </div>
+          <div class="field">
+            <label class="req">Jenis Kelamin</label>
+            <div class="radios" role="radiogroup" aria-label="Jenis Kelamin">
+              <label class="radio"><input type="radio" name="gender" value="Laki-Laki" checked> Laki-Laki</label>
+              <label class="radio"><input type="radio" name="gender" value="Perempuan"> Perempuan</label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="req">Alamat Lengkap</label>
+            <textarea id="address" placeholder="Tuliskan alamat lengkap..." required></textarea>
+          </div>
+          <div class="field">
+            <label>Detail</label>
+            <textarea id="notes" placeholder="Catatan tambahan (opsional)"></textarea>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn ghost" onclick="if(history.length>1){history.back();} else { window.location.href='detail.html'; }">Kembali</button>
+            <button type="submit" class="btn primary">Lanjut</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- RIGHT: Side summary -->
+      <aside class="summary">
+        <div class="card section" style="margin-bottom:14px">
+          <div class="item">
+            <div class="icon" aria-hidden="true">
+              <!-- Calendar icon -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M7 3v4M17 3v4M3 11h18M5 7h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="kvs" style="flex:1">
+              <h3 id="sumTitle">Festival Tari Hardiknas</h3>
+              <div class="subtle" id="sumDate">15 Juli 2025 | 16.00 - 22.00 WIB</div>
+            </div>
+          </div>
+          <div class="item" style="margin-top:10px">
+            <div class="icon" aria-hidden="true">
+              <!-- Map pin -->
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 22s7-5.33 7-12a7 7 0 1 0-14 0c0 6.67 7 12 7 12z" stroke="#7c3aed" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="#7c3aed" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="subtle" id="sumPlace">Lapangan SMKN 6 Jember</div>
+          </div>
+        </div>
+
+        <div class="card section">
+          <h2>Ringkasan Pesanan</h2>
+          <div class="item" style="margin-top:10px">
+            <div class="icon" aria-hidden="true">
+              <!-- Ticket emoji style -->
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M4 7a2 2 0 0 1 2-2h6v3a2 2 0 1 0 0 4v3H6a2 2 0 0 1-2-2V7z" fill="#fbbf24" stroke="#d97706"/>
+                <path d="M12 5h6a2 2 0 0 1 2 2v6h-3a2 2 0 1 0-4 0h-3V5z" fill="#fde68a" stroke="#d97706"/>
+              </svg>
+            </div>
+            <div style="flex:1">
+              <div class="subtle" id="sumEventLine">Festival Tari Hardiknas (Senin 15 Agustus 2025)</div>
+              <div class="subtle" id="sumUnit">1 tiket x Rp 50.000</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="totalRow">
+            <div id="sumQty">Jumlah (1 Tiket)</div>
+            <div id="sumTotal">Rp 50.000</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- STEP 2: Payment Methods -->
+    <div id="step2" class="grid" style="margin-top:22px; display:none">
+      <div class="card section">
+        <h2>Metode Pembayaran</h2>
+        <div class="methods" id="methods">
+          <div class="option active" data-method="Dana">
+            <div class="left">
+              <div class="badge" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#2563eb"><circle cx="12" cy="12" r="9"/></svg>
+              </div>
+              <div class="title">Dana</div>
+            </div>
+            <div class="check">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+
+          <div class="option" data-method="Gopay">
+            <div class="left">
+              <div class="badge" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#06b6d4"><circle cx="12" cy="12" r="9"/></svg>
+              </div>
+              <div class="title">Gopay</div>
+            </div>
+            <div class="check"></div>
+          </div>
+
+          <div class="option" data-method="Ovo">
+            <div class="left">
+              <div class="badge" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#7c3aed"><circle cx="12" cy="12" r="9"/></svg>
+              </div>
+              <div class="title">OVO</div>
+            </div>
+            <div class="check"></div>
+          </div>
+
+          <div class="info" id="payInfo">
+            Pilih metode pembayaran. Instruksi akan tampil di sini.
+          </div>
+        </div>
+      </div>
+
+      <aside class="summary">
+        <div class="card section" style="margin-bottom:14px">
+          <div class="item">
+            <div class="icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M7 3v4M17 3v4M3 11h18M5 7h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="kvs" style="flex:1">
+              <h3 id="sum2Title">Judul Event</h3>
+              <div class="subtle" id="sum2Date">Tanggal & Waktu</div>
+            </div>
+          </div>
+          <div class="item" style="margin-top:10px">
+            <div class="icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 22s7-5.33 7-12a7 7 0 1 0-14 0c0 6.67 7 12 7 12z" stroke="#7c3aed" stroke-width="2"/><circle cx="12" cy="10" r="3" stroke="#7c3aed" stroke-width="2"/>
+              </svg>
+            </div>
+            <div class="subtle" id="sum2Place">Lokasi</div>
+          </div>
+        </div>
+
+        <div class="card section" style="margin-bottom:14px">
+          <h2>Ringkasan Pesanan</h2>
+          <div class="item" style="margin-top:10px">
+            <div class="icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M4 7a2 2 0 0 1 2-2h6v3a2 2 0 1 0 0 4v3H6a2 2 0 0 1-2-2V7z" fill="#fbbf24" stroke="#d97706"/>
+                <path d="M12 5h6a2 2 0 0 1 2 2v6h-3a2 2 0 1 0-4 0h-3V5z" fill="#fde68a" stroke="#d97706"/>
+              </svg>
+            </div>
+            <div style="flex:1">
+              <div class="subtle" id="sum2EventLine">Nama Event (Hari, Tanggal)</div>
+              <div class="subtle" id="sum2Unit">1 tiket x Rp 50.000</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card section breakdown">
+          <h2>Detail Pembayaran</h2>
+          <div class="row"><div id="labelPass">Daily Pass</div><div id="pricePass">Rp 0</div></div>
+          <div class="row"><div id="labelTax">Pajak Daerah (10%)</div><div id="priceTax">Rp 0</div></div>
+          <div class="row"><div>Biaya Platform</div><div id="priceFee">Rp 0</div></div>
+          <div class="total">
+            <div>Total Keseluruhan</div>
+            <div id="grandTotal">Rp 0</div>
+          </div>
+
+          <div class="actions" style="margin-top:16px;justify-content:space-between">
+            <button class="btn ghost" id="backToStep1">← Kembali</button>
+            <button class="btn primary" id="payNow">Lanjut</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // Dataset event — samakan id dengan halaman sebelumnya.
+    const EVENTS = {
+      "hardiknas-tari": {
+        title: "Festival Tari Hardiknas",
+        date: "15 Agustus 2025 • 16.00 – 22.00 WIB",
+        dateShort: "Senin 15 Agustus 2025",
+        place: "Lapangan SMKN 6 Jember",
+        price: 50000
+      },
+      "konser-malam": {
+        title: "Konser Malam Kampus",
+        date: "24 Agustus 2025 • 19.00 – 22.00 WIB",
+        dateShort: "Minggu 24 Agustus 2025",
+        place: "Lapangan Utama",
+        price: 75000
+      },
+      "teater-aksara": {
+        title: "Teater Aksara",
+        date: "31 Agustus 2025 • 16.00 – 18.00 WIB",
+        dateShort: "Minggu 31 Agustus 2025",
+        place: "Gedung Serbaguna",
+        price: 60000
+      }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const eventId = params.get("id") || "hardiknas-tari";
+    const qtyParam = parseInt(params.get("qty") || "1", 10);
+    const qty = Number.isFinite(qtyParam) && qtyParam > 0 ? qtyParam : 1;
+    const d = EVENTS[eventId] || Object.values(EVENTS)[0];
+
+    // Fees (ubah sesuai kebijakanmu)
+    const TAX_RATE = 0.10;     // 10% dari subtotal
+    const PLATFORM_FEE = 5000; // per order (flat)
+
+    // Helper
+    const fmt = n => "Rp " + new Intl.NumberFormat("id-ID").format(Math.round(n || 0));
+
+    // Step refs (kanan ringkasan shared)
+    const sumTitle = document.getElementById("sumTitle");
+    const sumDate = document.getElementById("sumDate");
+    const sumPlace = document.getElementById("sumPlace");
+    const sumEventLine = document.getElementById("sumEventLine");
+    const sumUnit = document.getElementById("sumUnit");
+    const sumQty = document.getElementById("sumQty");
+    const sumTotal = document.getElementById("sumTotal");
+
+    function renderRightSummary(){
+      const unit = d.price;
+      const subtotal = unit * qty;
+      sumTitle.textContent = d.title;
+      sumDate.textContent = d.date;
+      sumPlace.textContent = d.place;
+      sumEventLine.textContent = `${d.title} (${d.dateShort})`;
+      sumUnit.textContent = `${qty} tiket x ${fmt(unit)}`;
+      sumQty.textContent = `Jumlah (${qty} Tiket)`;
+      sumTotal.textContent = fmt(subtotal);
+    }
+    renderRightSummary();
+
+    // Form handling (Step1 -> Step2)
+    const form = document.getElementById("buyerForm");
+    const step1 = document.getElementById("step1");
+    const step2 = document.getElementById("step2");
+    const stepperDots = document.querySelectorAll("#stepper .dot");
+
+    let buyer = {};
+    form.addEventListener("submit", (e)=>{
+      e.preventDefault();
+      // Basic validation
+      const name = document.getElementById("name");
+      const email = document.getElementById("email");
+      const phone = document.getElementById("phone");
+      const address = document.getElementById("address");
+      if(!name.value.trim() || !email.validity.valid || !phone.validity.valid || !address.value.trim()){
+        [name,email,phone,address].forEach(el => {
+          el.reportValidity();
+          if(!el.checkValidity()) el.focus();
+        });
+        return;
+      }
+      const gender = (new FormData(form)).get("gender");
+      buyer = {
+        name: name.value.trim(),
+        email: email.value.trim(),
+        phone: phone.value.trim(),
+        gender,
+        address: address.value.trim(),
+        notes: document.getElementById("notes").value.trim()
+      };
+      // Go to step 2
+      step1.style.display = "none";
+      step2.style.display = "grid";
+      stepperDots[0].classList.remove("on");
+      stepperDots[1].classList.add("on");
+      // Populate step 2 summaries
+      document.getElementById("sum2Title").textContent = d.title;
+      document.getElementById("sum2Date").textContent = d.date;
+      document.getElementById("sum2Place").textContent = d.place;
+      document.getElementById("sum2EventLine").textContent = `${d.title} (${d.dateShort})`;
+      document.getElementById("sum2Unit").textContent = `${qty} tiket x ${fmt(d.price)}`;
+      updateBreakdown();
+      updatePayInfo();
+    });
+
+    // Back to step 1
+    document.getElementById("backToStep1").addEventListener("click", ()=>{
+      step2.style.display = "none";
+      step1.style.display = "block";
+      stepperDots[1].classList.remove("on");
+      stepperDots[0].classList.add("on");
+    });
+
+    // Payment methods selection
+    const methodBox = document.getElementById("methods");
+    let method = "Dana";
+    methodBox.addEventListener("click", (e)=>{
+      const opt = e.target.closest(".option");
+      if(!opt) return;
+      method = opt.dataset.method;
+      document.querySelectorAll(".option").forEach(o=>o.classList.toggle("active", o===opt));
+      updatePayInfo();
+    });
+
+    function updatePayInfo(){
+      const info = document.getElementById("payInfo");
+      const inst = {
+        Dana: "DANA adalah dompet digital untuk transaksi non-tunai. Setelah menekan Lanjut, kamu akan menerima kode pembayaran/QR di halaman berikutnya.",
+        Gopay: "Gopay: Pastikan saldo cukup. Lanjutkan untuk mendapatkan instruksi pembayaran dan batas waktu.",
+        Ovo: "OVO: Gunakan OVO app untuk menyelesaikan pembayaran. Kode/instruksi akan ditampilkan setelah Lanjut."
+      };
+      info.textContent = inst[method] || "Pilih metode pembayaran.";
+    }
+
+    // Breakdown calculation (Step 2)
+    function updateBreakdown(){
+      const unit = d.price;
+      const subtotal = unit * qty;
+      const tax = Math.round(subtotal * TAX_RATE);
+      const fee = PLATFORM_FEE;
+      const grand = subtotal + tax + fee;
+
+      document.getElementById("labelPass").textContent = `Daily Pass (${qty} tiket)`;
+      document.getElementById("pricePass").textContent = fmt(subtotal);
+      document.getElementById("priceTax").textContent = fmt(tax);
+      document.getElementById("priceFee").textContent = fmt(fee);
+      document.getElementById("grandTotal").textContent = fmt(grand);
+    }
+
+    // Final proceed
+    document.getElementById("payNow").addEventListener("click", ()=>{
+      const unit = d.price;
+      const subtotal = unit * qty;
+      const tax = Math.round(subtotal * TAX_RATE);
+      const fee = PLATFORM_FEE;
+      const grand = subtotal + tax + fee;
+
+      const detail = {
+        eventId, event: d.title, date: d.dateShort, place: d.place,
+        qty, unitPrice: unit, subtotal, tax, fee, total: grand,
+        method, buyer
+      };
+      // Di sini integrasikan ke backend/gateway pembayaran.
+      // Untuk demo, kita tampilkan ringkasan dan redirect simulasi.
+    //   alert(
+    //     `Pesanan diproses:\n` +
+    //     `Event: ${detail.event}\n` +
+    //     `Metode: ${detail.method}\n` +
+    //     `Atas nama: ${detail.buyer.name}\n` +
+    //     `Jumlah: ${detail.qty} tiket\n` +
+    //     `Total: ${fmt(detail.total)}\n\n` +
+    //     `Lanjut ke instruksi pembayaran...`
+    //   );
+      window.location.href = 'pay.html';
+      // Contoh redirect ke halaman "success" (buat sendiri bila perlu):
+      // window.location.href = `success.html?order=${encodeURIComponent(JSON.stringify(detail))}`;
+    });
+
+    // Prefill right summary on load with URL data
+    // and set step 1 visible by default.
+  </script>
+</body>
+</html>

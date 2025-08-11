@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detail & Beli Tiket</title>
+  <style>
+    :root{
+      --bg:#fafafa;
+      --text:#111827;
+      --muted:#6b7280;
+      --primary:#7c3aed;   /* ungu */
+      --primary-2:#5b21b6; /* ungu gelap */
+      --card:#ffffff;
+      --ring:#a78bfa;
+      --radius:20px;
+      --shadow: 0 10px 30px rgba(16,24,40,.08), 0 2px 6px rgba(16,24,40,.06);
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;background:var(--bg);color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      line-height:1.6;
+    }
+
+    .wrap{
+      width:min(1100px, 92vw);
+      margin-inline:auto;
+      padding:28px 0 72px;
+    }
+
+    /* Card utama */
+    .card{
+      background:var(--card);
+      border-radius:24px;
+      border:1px solid #e5e7eb;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
+    }
+    .back{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:12px;border:1px solid #e5e7eb;background:#fff;
+      color:#374151;text-decoration:none;font-weight:700;
+    }
+    .back:hover{transform:translateY(-1px)}
+    .title{font-size:clamp(18px,3.4vw,24px);margin:0;font-weight:800}
+
+    /* Ticket preview */
+    .ticket-preview{
+      display:grid;place-items:center;margin:8px 0 8px;
+    }
+    .ticket-img{
+      width:min(760px, 100%);
+      height:auto;
+      border-radius:14px;border:6px solid #e5e7eb;
+      box-shadow:0 6px 16px rgba(0,0,0,.06);
+      background:#f5f3ff;
+    }
+
+    /* Konten deskripsi dan kontrol */
+    .content{
+      display:grid;gap:26px;
+      grid-template-columns:1.15fr .85fr;
+      margin-top:12px;
+    }
+    @media (max-width: 900px){
+      .content{grid-template-columns:1fr}
+    }
+
+    .desc h3{
+      margin:0 0 10px;font-size:22px;font-weight:800;
+    }
+    .underline{
+      width:80px;height:3px;border-radius:3px;background:var(--primary);
+      opacity:.5;margin:8px 0 16px;
+    }
+    .meta{
+      display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 6px;color:#374151
+    }
+    .chip{
+      background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;
+      padding:6px 10px;font-weight:700;font-size:12px;color:#374151
+    }
+
+    /* Kotak harga, total, dan stepper */
+    .panel{
+      background:linear-gradient(145deg, rgba(124,58,237,.08), rgba(91,33,182,.08));
+      border:1px solid rgba(124,58,237,.20);
+      border-radius:18px;
+      padding:16px;
+    }
+    .rows{display:grid;gap:14px}
+    .price-row{
+      display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;
+    }
+    @media (max-width:560px){ .price-row{grid-template-columns:1fr} }
+
+    .pill{
+      background:linear-gradient(90deg, #ede9fe, #ddd6fe);
+      color:#1f2937;border-radius:14px;padding:12px 14px;
+      border:1px solid rgba(124,58,237,.25);
+      font-weight:800;display:flex;justify-content:center;align-items:center;
+      min-height:44px;
+    }
+    .pill.total{
+      background:linear-gradient(90deg, #c7d2fe, #a5b4fc);
+      border-color:rgba(99,102,241,.35);
+    }
+
+    .qty{
+      display:flex;justify-content:flex-end;align-items:center;gap:10px;
+    }
+    .stepper{
+      display:inline-flex;align-items:center;gap:8px;
+      background:linear-gradient(90deg, var(--primary), var(--primary-2));
+      color:#fff;border-radius:999px;padding:6px;
+      border:1px solid rgba(255,255,255,.35);
+      box-shadow:0 8px 18px rgba(124,58,237,.35);
+      min-width:130px;justify-content:space-between;
+    }
+    .stepper button{
+      width:28px;height:28px;border-radius:999px;border:1px solid rgba(255,255,255,.45);
+      background:rgba(255,255,255,.18);color:#fff;font-weight:800;cursor:pointer;
+    }
+    .stepper button:disabled{opacity:.55;cursor:not-allowed}
+    .stepper input{
+      width:40px;text-align:center;border:0;background:transparent;color:#fff;
+      font-weight:800;font-size:15px;outline:none;
+      -moz-appearance:textfield;
+    }
+    .stepper input::-webkit-outer-spin-button,
+    .stepper input::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+
+    .cta{
+      margin-top:12px;
+    }
+    .btn{
+      width:100%;padding:14px 18px;border-radius:14px;border:0;cursor:pointer;
+      color:#fff;font-weight:900;font-size:16px;
+      background:linear-gradient(90deg, var(--primary), var(--primary-2));
+      box-shadow:0 10px 26px rgba(124,58,237,.4);
+    }
+    .btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+    .note{
+      font-size:12px;color:#6b7280;margin-top:8px
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <a class="back" href="index.html" onclick="if(history.length>1){history.back();return false;}">
+          ← Kembali
+        </a>
+        <h1 class="title" id="title">Judul Event</h1>
+      </div>
+
+      <div class="ticket-preview">
+        <!-- Ganti src gambar tiket sesuai file kamu -->
+        <img id="ticketImg" class="ticket-img" src="/img/tiket.png" alt="Tiket Event">
+      </div>
+
+      <div class="content">
+        <section class="desc">
+          <div class="meta">
+            <span class="chip" id="dateChip">Tanggal</span>
+            <span class="chip" id="placeChip">Lokasi</span>
+            <span class="chip" id="catChip">Kategori</span>
+          </div>
+          <h3>Deskripsi</h3>
+          <div class="underline"></div>
+          <p id="descText">
+            Deskripsi event akan muncul di sini.
+          </p>
+        </section>
+
+        <aside class="panel">
+          <div class="rows">
+            <div class="price-row">
+              <div class="pill" id="priceBox">Harga: Rp 0</div>
+              <div class="pill total" id="totalBox">Total: Rp 0</div>
+            </div>
+            <div class="qty">
+              <label for="qty" class="visually-hidden">Jumlah tiket</label>
+              <div class="stepper" role="group" aria-label="Jumlah tiket">
+                <button id="minus" aria-label="Kurangi">−</button>
+                <input id="qty" type="number" inputmode="numeric" min="1" max="99" value="1" aria-live="polite" />
+                <button id="plus" aria-label="Tambah">+</button>
+              </div>
+            </div>
+            <div class="cta">
+              <button class="btn" id="buyBtn">Beli Sekarang</button>
+              <p class="note">Dengan menekan “Beli Sekarang”, kamu akan diarahkan ke proses pembayaran. Pastikan jumlah tiket dan total sudah sesuai.</p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data event contoh. Ganti src gambar sesuai asetmu.
+    const EVENTS = {
+      "hardiknas-tari": {
+        title: "Festival Tari Hardiknas",
+        category: "Tari",
+        date: "12 Agustus 2025 • 19.00 WIB",
+        place: "Lapangan Sekolah, SMK Negeri 6 Jember",
+        ticketImg: "/img/tiket.png",
+        price: 50000,
+        desc:
+          "Dalam semangat menjaga dan memperkenalkan kekayaan budaya bangsa, Festival Tari Hardiknas menyajikan ajang unjuk bakat dan kreativitas siswa-siswi dalam bidang tari tradisional dan kontemporer."
+      },
+      "konser-malam": {
+        title: "Konser Malam Kampus",
+        category: "Musik",
+        date: "24 Agustus 2025 • 19.00 WIB",
+        place: "Lapangan Utama",
+        ticketImg: "/img/tiket.png",
+        price: 75000,
+        desc:
+          "Konser kolaboratif lintas UKM musik dengan berbagai genre dan penampilan bintang tamu lokal. Rasakan malam penuh energi dan kebersamaan."
+      },
+      "teater-aksara": {
+        title: "Teater Aksara",
+        category: "Teater",
+        date: "31 Agustus 2025 • 16.00 WIB",
+        place: "Gedung Serbaguna",
+        ticketImg: "/img/tiket.png",
+        price: 60000,
+        desc:
+          "Pementasan teater bertema budaya dan literasi dengan perpaduan musik, tari, dan drama untuk menghadirkan pengalaman panggung yang berkesan."
+      }
+    };
+
+    // Ambil ID event dari query (?id=...)
+    const params = new URLSearchParams(location.search);
+    const eventId = params.get("id") || "hardiknas-tari";
+    const data = EVENTS[eventId] || Object.values(EVENTS)[0];
+
+    // Element refs
+    const titleEl = document.getElementById("title");
+    const imgEl = document.getElementById("ticketImg");
+    const dateChip = document.getElementById("dateChip");
+    const placeChip = document.getElementById("placeChip");
+    const catChip = document.getElementById("catChip");
+    const descEl = document.getElementById("descText");
+    const priceBox = document.getElementById("priceBox");
+    const totalBox = document.getElementById("totalBox");
+    const qtyInput = document.getElementById("qty");
+    const minusBtn = document.getElementById("minus");
+    const plusBtn = document.getElementById("plus");
+    const buyBtn = document.getElementById("buyBtn");
+
+    // Helper format Rupiah tanpa desimal
+    const formatIDR = n => "Rp " + new Intl.NumberFormat("id-ID").format(Math.round(n || 0));
+
+    // Render data
+    function render(){
+      titleEl.textContent = data.title;
+      imgEl.src = data.ticketImg || "";
+      imgEl.alt = "Tiket " + data.title;
+      // fallback jika gambar hilang
+      imgEl.onerror = () => {
+        imgEl.onerror = null;
+        imgEl.src = 'data:image/svg+xml;utf8,<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="1200" height="380"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="%23ede9fe" offset="0"/><stop stop-color="%23ddd6fe" offset="1"/></linearGradient></defs><rect width="100%" height="100%" rx="18" ry="18" fill="url(%23g)"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Segoe UI, Roboto, Arial" font-size="26" fill="%235b21b6" font-weight="700">Preview Tiket</text></svg>';
+      };
+      dateChip.textContent = data.date;
+      placeChip.textContent = data.place;
+      catChip.textContent = data.category;
+      descEl.textContent = data.desc;
+      priceBox.textContent = "Harga: " + formatIDR(data.price);
+      updateTotal();
+    }
+
+    function clampQty(){
+      const min = parseInt(qtyInput.min || 1, 10);
+      const max = parseInt(qtyInput.max || 99, 10);
+      let v = parseInt(qtyInput.value || min, 10);
+      if(Number.isNaN(v)) v = min;
+      v = Math.max(min, Math.min(max, v));
+      qtyInput.value = v;
+      minusBtn.disabled = v <= min;
+      plusBtn.disabled = v >= max;
+      return v;
+    }
+
+    function updateTotal(){
+      const qty = clampQty();
+      const total = qty * (data.price || 0);
+      totalBox.textContent = "Total: " + formatIDR(total);
+    }
+
+    minusBtn.addEventListener("click", () => { qtyInput.value = clampQty() - 1; updateTotal(); });
+    plusBtn.addEventListener("click", () => { qtyInput.value = clampQty() + 1; updateTotal(); });
+    qtyInput.addEventListener("input", updateTotal);
+    qtyInput.addEventListener("blur", updateTotal);
+    qtyInput.addEventListener("keydown", e => {
+      if(e.key === "Enter"){ e.preventDefault(); updateTotal(); }
+    });
+
+    buyBtn.addEventListener("click", () => {
+      const qty = clampQty();
+      const total = qty * (data.price || 0);
+      // Integrasikan dengan gateway pembayaran/tautan checkout milikmu di sini
+    //   alert(
+    //     `Pesanan Anda:\n` +
+    //     `Event: ${data.title}\n` +
+    //     `Jumlah: ${qty} tiket\n` +
+    //     `Total: ${formatIDR(total)}\n\n` +
+    //     `Lanjutkan ke pembayaran...`
+    //   );
+      // Contoh redirect:
+      // window.location.href = `checkout.html?id=${encodeURIComponent(eventId)}&qty=${qty}`;
+      window.location.href = 'bayar.html';
+      // Simpan order ke localStorage jika perlu
+    });
+
+    render();
+  </script>
+</body>
+</html>

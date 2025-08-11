@@ -1,0 +1,85 @@
+<!-- pending.html — Halaman Pending/Verifikasi -->
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pembayaran Diproses</title>
+<style>
+  :root{--bg:#f6f7fb;--card:#fff;--text:#1f2330;--muted:#6b7280;--line:#e9eaf0;--primary:#8f67e8}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto}
+  .container{max-width:980px;margin:0 auto;padding:16px}
+  header{background:linear-gradient(90deg,#8a63d2,#b07cfb);color:#fff}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 16px}
+  .brand{display:flex;gap:10px;align-items:center;font-weight:800}
+  .brand-badge{width:28px;height:28px;border-radius:8px;background:#fff;color:#8a63d2;display:grid;place-items:center;font-weight:900}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px;box-shadow:0 2px 22px rgba(0,0,0,.05)}
+  .center{text-align:center}
+  .illu{
+    width:260px;height:180px;margin:10px auto;border-radius:12px;background:
+      radial-gradient(60px 60px at 60px 60px, #ffedd5, transparent 62%),
+      radial-gradient(80px 80px at 200px 130px, #dbeafe, transparent 62%),
+      linear-gradient(180deg,#f9fafb,#eef2ff);
+    position:relative;overflow:hidden;border:1px solid var(--line)
+  }
+  .runner{position:absolute;left:30px;bottom:20px;width:80px;height:110px;background:#8a63d2;border-radius:14px 14px 6px 6px;transform-origin:bottom center;animation:run 1.2s infinite ease-in-out}
+  .runner::before{content:"";position:absolute;left:6px;top:-16px;width:28px;height:28px;border-radius:50%;background:#fee2e2;border:3px solid #fca5a5}
+  .clock{position:absolute;right:30px;top:24px;width:80px;height:80px;border-radius:50%;border:6px solid #fbbf24}
+  .clock::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:28px;background:#f59e0b;transform-origin:bottom;animation:tik 2s infinite linear;transform:translate(-50%,-100%) rotate(0deg)}
+  @keyframes run{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(6deg)}}
+  @keyframes tik{to{transform:translate(-50%,-100%) rotate(360deg)}}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+  .btn.primary{background:var(--primary);border-color:transparent;color:#fff}
+  .small{font-size:13px;color:var(--muted)}
+  .actions{display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav container">
+    <div class="brand"><div class="brand-badge">E</div> EPIM 2025</div>
+    <div>Pembayaran</div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card center">
+    <h3 style="margin:0 0 6px 0">Terimakasih! Pembayaran anda Sedang di Proses</h3>
+    <div class="small">Harap tunggu, kami sedang melakukan verifikasi</div>
+    <div class="illu" role="img" aria-label="Ilustrasi verifikasi sedang berlangsung">
+      <div class="runner"></div>
+      <div class="clock"></div>
+    </div>
+    <div class="small" id="statusLine">Status saat ini: Pending</div>
+    <div class="actions">
+      <button class="btn" id="back">Kembali ke Pembayaran</button>
+      <button class="btn primary" id="check">Cek Status</button>
+    </div>
+  </section>
+</main>
+
+<script>
+  const order = JSON.parse(localStorage.getItem('order')||'null');
+  if(!order){ location.href='pay.html'; }
+  order.status = order.status || 'pending';
+  localStorage.setItem('order', JSON.stringify(order));
+
+  document.getElementById('back').onclick=()=>location.href='pay.html';
+  document.getElementById('check').onclick=()=>{
+    // Demo: jika sebelumnya sudah ditandai paid di tempat lain, langsung arahkan.
+    const latest = JSON.parse(localStorage.getItem('order'));
+    if(latest.status==='paid'){
+      location.href='success.html';
+    }else{
+      // Simulasikan verifikasi selesai setelah 3 detik
+      document.getElementById('statusLine').textContent='Memeriksa status...';
+      setTimeout(()=>{
+        latest.status='paid';
+        localStorage.setItem('order', JSON.stringify(latest));
+        location.href='success.html';
+      },3000);
+    }
+  };
+</script>
+</body>
+</html>

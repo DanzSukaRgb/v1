@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Masuk - Festival Enem</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        color: #0f172a;
+      }
+      .card {
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 20px 60px rgba(0,0,0,.25);
+      }
+      .brand {
+        display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+      }
+      .brand img { width: 36px; height: 36px; }
+      h1 { font-size: 1.4rem; margin: 6px 0 2px; }
+      p.sub { margin: 0 0 18px; color: #475569; font-size: .95rem; }
+      label { display: block; font-size: .9rem; margin-bottom: 6px; color: #334155; }
+      input {
+        width: 100%; padding: 12px 12px; border: 1px solid #d1d5db; border-radius: 10px;
+        font-size: .95rem; margin-bottom: 12px;
+      }
+      .row { display: flex; justify-content: space-between; align-items: center; }
+      button.primary {
+        width: 100%; background: #002b5b; color: #fff; border: 0; border-radius: 10px;
+        padding: 12px 14px; font-weight: 700; cursor: pointer;
+      }
+      button.primary:hover { background: #004080; }
+      .alt { margin-top: 14px; text-align: center; color: #475569; font-size: .95rem; }
+      a.link { color: #6c3bff; font-weight: 700; text-decoration: none; }
+      .top-links { position: fixed; top: 12px; left: 12px; }
+      .back { color: #fff; text-decoration: none; background: #00000030; padding: 6px 10px; border-radius: 8px; }
+    </style>
+  </head>
+  <body>
+    <a class="back top-links" href="index.html">← Kembali</a>
+    <div class="card">
+      <div class="brand">
+        <img src="/img/logo.png" alt="Logo" />
+        <strong>Festival Enem</strong>
+      </div>
+      <h1>Masuk</h1>
+      <p class="sub">Ini hanya simulasi. Masukkan email apa saja untuk lanjut.</p>
+
+      <form id="loginForm">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="nama@contoh.com" required />
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" required />
+        <button class="primary" type="submit">Masuk</button>
+      </form>
+
+      <p class="alt">
+        Belum punya akun?
+        <a class="link" href="register.html">Daftar</a>
+      </p>
+    </div>
+
+    <script>
+      const AUTH_KEY = "fe_loggedIn";
+      const NAME_KEY = "fe_userName";
+
+      document.getElementById("loginForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        const email = (document.getElementById("email").value || "").trim();
+        const nameFromEmail = email.split("@")[0]?.replace(/[._-]+/g, " ") || "Pengguna";
+        localStorage.setItem(AUTH_KEY, "true");
+        localStorage.setItem(NAME_KEY, nameFromEmail);
+        window.location.href = "index.html";
+      });
+    </script>
+  </body>
+</html>

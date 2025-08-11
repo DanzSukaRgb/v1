@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title></title>
+    <title>Festival Enem</title>
     <style>
       * {
         margin: 0;
@@ -12,6 +12,7 @@
         text-decoration: none;
         list-style: none;
         font-family: Poppins, sans-serif;
+        scroll-behavior: smooth;
       }
       body {
         overflow-x: hidden;
@@ -32,6 +33,7 @@
           right: 0;
           top: 0;
           z-index: 1000;
+          backdrop-filter: blur(4px);
         }
 
         ul {
@@ -42,7 +44,6 @@
 
         nav ul li a {
           color: rgb(255, 255, 255);
-          font-weight: bold;
           font-weight: 500;
           transition: color 0.3s ease;
         }
@@ -66,6 +67,126 @@
           display: none;
           font-size: 24px;
           cursor: pointer;
+          color: #fff;
+        }
+
+        /* Auth area */
+        .auth-area {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .auth-btn {
+          background-color: #002b5b;
+          color: white;
+          border: none;
+          border-radius: 10px;
+          padding: 8px 14px;
+          font-size: 0.9rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .auth-btn:hover {
+          background-color: #004080;
+        }
+
+        .auth-btn.outline {
+          background: transparent;
+          border: 1px solid #ffffffcc;
+          color: white;
+        }
+
+        .auth-btn.outline:hover {
+          opacity: 0.85;
+          background: #ffffff14;
+        }
+
+        .profile {
+          position: relative;
+          display: none; /* default hidden (shown after login) */
+          align-items: center;
+          gap: 8px;
+          cursor: pointer;
+          user-select: none;
+        }
+
+        .profile.show {
+          display: flex;
+        }
+
+        .avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: #ffd166;
+          color: #002b5b;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 700;
+          font-size: 0.95rem;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-name {
+          color: #fff;
+          font-weight: 600;
+          max-width: 140px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .caret {
+          color: #fff;
+          font-size: 0.8rem;
+          opacity: 0.9;
+        }
+
+        .dropdown {
+          position: absolute;
+          top: 48px;
+          right: 0;
+          background: white;
+          color: #333;
+          border-radius: 10px;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+          min-width: 180px;
+          padding: 6px;
+          display: none;
+          z-index: 1200;
+        }
+
+        .dropdown.show {
+          display: block;
+        }
+
+        .dropdown a,
+        .dropdown button {
+          display: block;
+          width: 100%;
+          text-align: left;
+          background: transparent;
+          border: none;
+          padding: 10px 12px;
+          border-radius: 8px;
+          color: #222;
+          font-size: 0.95rem;
+          cursor: pointer;
+        }
+
+        .dropdown a:hover,
+        .dropdown button:hover {
+          background: #f5f7fb;
+        }
+
+        @media (max-width: 1024px) {
+          .profile-name {
+            display: none;
+          }
         }
 
         @media (max-width: 768px) {
@@ -77,11 +198,12 @@
             left: -250px;
             width: 250px;
             height: 100vh;
-            background-color: #6d676473;
+            background-color: #6d6764e0;
             padding: 20px;
             box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
             transition: left 0.3s ease;
-            z-index: 1000;
+            z-index: 1100;
+            backdrop-filter: blur(4px);
           }
 
           ul.show {
@@ -91,19 +213,49 @@
           .menu-toggle {
             display: block;
           }
+
+          .auth-area {
+            gap: 8px;
+          }
+
+          .auth-btn {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+          }
         }
       </style>
+
       <div class="logo">
-        <img src="/img/logo.png" alt="" width="40" />
+        <img src="/img/logo.png" alt="Logo Festival Enem" width="40" />
       </div>
+
       <div class="menu-toggle" id="menu-toggle">☰</div>
+
       <ul id="menu">
         <li><a href="">Beranda</a></li>
-        <li><a href="">Tentang</a></li>
-        <li><a href="">Event</a></li>
-        <li><a href="">Informasi</a></li>
-        <li><input type="text" placeholder="Cari..." /></li>
+        <li><a href="#">Tentang</a></li>
+        <li><a href="#">Event</a></li>
+        <li><a href="#">Informasi</a></li>
+        <li><input type="text" placeholder="Cari..." aria-label="Cari" /></li>
       </ul>
+
+      <!-- Auth Area: sekarang Link ke halaman login/register -->
+      <div class="auth-area" id="auth-area">
+        <a class="auth-btn" id="link-login" href="login.html">Login</a>
+        <a class="auth-btn outline" id="link-register" href="register.html">Register</a>
+
+        <!-- Tampil setelah login -->
+        <div class="profile" id="profile">
+          <div class="avatar" id="avatar" aria-hidden="true">U</div>
+          <span class="profile-name" id="profileName">User</span>
+          <span class="caret">▾</span>
+
+          <div class="dropdown" id="profileDropdown" role="menu">
+            <a href="#" id="goDashboard">Dashboard</a>
+            <button id="btn-logout">Logout</button>
+          </div>
+        </div>
+      </div>
     </nav>
 
     <header>
@@ -197,7 +349,6 @@
           background-color: #004080;
         }
 
-        /* Desktop */
         @media (min-width: 1024px) {
           .timer {
             bottom: -40px;
@@ -208,7 +359,6 @@
           }
         }
 
-        /* Mobile */
         @media (max-width: 600px) {
           header h1 {
             font-size: 1.5rem;
@@ -220,11 +370,11 @@
       </style>
 
       <div class="dekorasi-kanan">
-        <img src="/Rectangle 4027.png" alt="" />
+        <img src="/img/dekorasi kanan bawh.png" alt="" />
       </div>
 
       <div class="dekorasi-kiri">
-        <img src="/Rectangle 4028.png" alt="" />
+        <img src="/img/dekorasi kiri bawh.png" alt="" />
       </div>
 
       <div class="header-content">
@@ -245,7 +395,7 @@
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 10px; /* jarak sangat kecil biar berdekatan */
+          gap: 10px;
           max-width: 1200px;
           margin: 0 auto;
           padding: 100px 20px;
@@ -257,7 +407,7 @@
           flex-direction: column;
           justify-content: center;
           z-index: 10;
-          align-items: flex-start; /* teks rata kiri */
+          align-items: flex-start;
           max-width: 500px;
         }
 
@@ -291,7 +441,7 @@
         }
 
         .image-kanan {
-          flex: 0 0 auto; /* agar ukuran sesuai gambar */
+          flex: 0 0 auto;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -340,7 +490,7 @@
       </div>
 
       <div class="image-kanan">
-        <img src="/Batiknya Indonesia (13) 1.png" alt="Logo Festival Enem" />
+        <img src="/img/logo-tentang.png" alt="Logo Festival Enem" />
       </div>
     </div>
 
@@ -351,7 +501,6 @@
           max-width: 1200px;
           margin: 0 auto;
           position: relative;
-          /* z-index: 1; */
         }
 
         .kiri-atas,
@@ -362,7 +511,7 @@
           z-index: -1;
         }
         .kiri-atas {
-          top: 0px;
+          top: -300px;
           left: -200px;
         }
 
@@ -516,7 +665,6 @@
           }
         }
 
-        /* Pagination Styles */
         .pagination {
           display: flex;
           justify-content: center;
@@ -554,33 +702,21 @@
 
       <h1>Jadwal Kegiatan</h1>
       <div class="kiri-atas">
-        <img
-          src="/Screenshot_2025-08-11_150134-removebg-preview 1.png"
-          alt=""
-        />
+        <img src="/img/bulet.png" alt="" />
       </div>
       <div class="kiri-bawah">
-        <img
-          src="/Screenshot_2025-08-11_150134-removebg-preview 3.png"
-          alt=""
-        />
+        <img src="/img/dekorasi titik2.png" alt="" />
       </div>
       <div class="kanan-atas">
-        <img
-          src="/Screenshot_2025-08-11_150134-removebg-preview 3.png"
-          alt=""
-        />
+        <img src="/img/dekorasi titik2.png" alt="" />
       </div>
       <div class="kanan-bawah">
-        <img
-          src="/Screenshot_2025-08-11_150134-removebg-preview 1.png"
-          alt=""
-        />
+        <img src="/img/bulet.png" alt="" />
       </div>
       <div class="card-container" id="card-container">
         <div class="card">
           <div class="card-image">
-            <img src="/Rectangle 52.png" alt="Festival Tari Hardiknas" />
+            <img src="/img/slider2.png" alt="Festival Tari Hardiknas" />
             <div class="date-badge"><i>📅</i> 21 Juli 2025</div>
           </div>
           <div class="card-content">
@@ -589,13 +725,13 @@
               Pementasan Tari oleh Maheswara SMKN 6 Jember dalam rangka
               Hardiknas
             </p>
-            <button class="btn-beli">Beli Tiket</button>
+            <button class="btn-beli" onclick="window.location.href='list-tiket.htm'">Beli Tiket</button>
           </div>
         </div>
 
         <div class="card">
           <div class="card-image">
-            <img src="/Rectangle 52-1.png" alt="Festival Budaya" />
+            <img src="/img/slider3.png" alt="Festival Budaya" />
             <div class="date-badge"><i>📅</i> 29 Juli 2025</div>
           </div>
           <div class="card-content">
@@ -604,13 +740,13 @@
               Festival budaya diadakan di sekolah untuk memperingati Hari
               Kemerdekaan
             </p>
-            <button class="btn-beli">Beli Tiket</button>
+            <button class="btn-beli" onclick="window.location.href='list-tiket.htm'">Beli Tiket</button>
           </div>
         </div>
 
         <div class="card">
           <div class="card-image">
-            <img src="/Rectangle 51.png" alt="Seni Tradisional" />
+            <img src="/img/slider4.png" alt="Seni Tradisional" />
             <div class="date-badge"><i>📅</i> 30 Juli 2025</div>
           </div>
           <div class="card-content">
@@ -619,12 +755,12 @@
               Festival seni tradisional untuk memeriahkan acara kemerdekaan di
               sekolah
             </p>
-            <button class="btn-beli">Beli Tiket</button>
+            <button class="btn-beli" onclick="window.location.href='list-tiket.htm'">Beli Tiket</button>
           </div>
         </div>
         <div class="card">
           <div class="card-image">
-            <img src="/Rectangle 43.png" alt="Seni Tradisional" />
+            <img src="/img/silder5.png" alt="Seni Tradisional" />
             <div class="date-badge"><i>📅</i> 30 Juli 2025</div>
           </div>
           <div class="card-content">
@@ -633,12 +769,12 @@
               Festival seni tradisional untuk memeriahkan acara kemerdekaan di
               sekolah
             </p>
-            <button class="btn-beli">Beli Tiket</button>
+            <button class="btn-beli" onclick="window.location.href='list-tiket.htm'">Beli Tiket</button>
           </div>
         </div>
         <div class="card">
           <div class="card-image">
-            <img src="/Rectangle 74.png" alt="Seni Tradisional" />
+            <img src="/img/slider6.png" alt="Seni Tradisional" />
             <div class="date-badge"><i>📅</i> 30 Juli 2025</div>
           </div>
           <div class="card-content">
@@ -647,12 +783,12 @@
               Festival seni tradisional untuk memeriahkan acara kemerdekaan di
               sekolah
             </p>
-            <button class="btn-beli">Beli Tiket</button>
+            <button class="btn-beli" onclick="window.location.href='list-tiket.htm'">Beli Tiket</button>
           </div>
         </div>
         <div class="card">
           <div class="card-image">
-            <img src="/Rectangle 124.png" alt="Seni Tradisional" />
+            <img src="/img/slider7.png" alt="Seni Tradisional" />
             <div class="date-badge"><i>📅</i> 30 Juli 2025</div>
           </div>
           <div class="card-content">
@@ -661,7 +797,7 @@
               Festival seni tradisional untuk memeriahkan acara kemerdekaan di
               sekolah
             </p>
-            <button class="btn-beli">Beli Tiket</button>
+            <button class="btn-beli" onclick="window.location.href='list-tiket.htm'">Beli Tiket</button>
           </div>
         </div>
       </div>
@@ -671,12 +807,12 @@
       </div>
       <button>Lihat Semua Tiket</button>
     </div>
+
     <div class="event-populer">
       <style>
         .event-populer {
           padding: 40px 0;
           text-align: center;
-          height: 100dvh;
           height: 100vh;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           position: relative;
@@ -719,7 +855,6 @@
           object-fit: cover;
         }
 
-        /* Overlay detail */
         .event-overlay {
           position: absolute;
           top: 0;
@@ -752,12 +887,10 @@
           cursor: pointer;
         }
 
-        /* Efek card tengah */
         .event-card.active {
           transform: scale(1.15);
         }
 
-        /* Tombol panah */
         .arrow {
           background: #123d5d;
           color: white;
@@ -781,8 +914,46 @@
         .arrow-left {
           left: 0;
         }
+
         .arrow-right {
           right: 0;
+        }
+
+        .modal {
+          display: none;
+          position: fixed;
+          z-index: 1000;
+          inset: 0;
+          background-color: rgba(0, 0, 0, 0.6);
+          justify-content: center;
+          align-items: flex-start;
+          padding: 40px 20px;
+          overflow-y: auto;
+        }
+
+        .modal-content {
+          background: white;
+          padding: 20px;
+          border-radius: 10px;
+          max-width: 500px;
+          width: 100%;
+          text-align: left;
+          position: relative;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content img {
+          width: 100%;
+          border-radius: 8px;
+          margin-bottom: 15px;
+        }
+
+        .close-btn {
+          position: absolute;
+          top: 10px;
+          right: 15px;
+          font-size: 20px;
+          cursor: pointer;
         }
       </style>
 
@@ -791,43 +962,42 @@
       <div class="slider-wrapper">
         <button class="arrow arrow-left">&#8249;</button>
         <div class="slider" id="slider">
-          <div class="event-card">
-            <img src="/Default.png" alt="Festival Seni" />
+          <div
+            class="event-card"
+            data-title="Festival Seni"
+            data-desc="Perayaan seni tahunan dengan berbagai pertunjukan, pameran, dan lomba kreatif."
+            data-img="/Default.png"
+          >
+            <img src="/img/cover-1.png" alt="Festival Seni" />
             <div class="event-overlay">
               <h3>Festival Seni</h3>
               <p>Perayaan seni tahunan.</p>
               <button class="btn-detail">Detail</button>
             </div>
           </div>
-          <div class="event-card">
-            <img src="/Rectangle 4036.png" alt="Festival Budaya" />
+          <div
+            class="event-card"
+            data-title="Festival Budaya"
+            data-desc="Festival budaya tahunan yang menampilkan tarian, musik, dan kuliner tradisional."
+            data-img="/Rectangle 4036.png"
+          >
+            <img src="/img/cover-2.png" alt="Festival Budaya" />
             <div class="event-overlay">
               <h3>Festival Budaya</h3>
               <p>Festival budaya tahunan.</p>
               <button class="btn-detail">Detail</button>
             </div>
           </div>
-          <div class="event-card">
-            <img src="/Rectangle 4037.png" alt="Konser Musik" />
+          <div
+            class="event-card"
+            data-title="Konser Musik"
+            data-desc="Konser artis papan atas dengan tata panggung spektakuler."
+            data-img="/Rectangle 4037.png"
+          >
+            <img src="/img/cover-3.png" alt="Konser Musik" />
             <div class="event-overlay">
               <h3>Konser Musik</h3>
               <p>Konser artis papan atas.</p>
-              <button class="btn-detail">Detail</button>
-            </div>
-          </div>
-          <div class="event-card">
-            <img src="/Default.png" alt="Karnaval Budaya" />
-            <div class="event-overlay">
-              <h3>Karnaval Budaya</h3>
-              <p>Pawai budaya meriah.</p>
-              <button class="btn-detail">Detail</button>
-            </div>
-          </div>
-          <div class="event-card">
-            <img src="/Rectangle 4037.png" alt="Drama Teater" />
-            <div class="event-overlay">
-              <h3>Drama Teater</h3>
-              <p>Pertunjukan drama spektakuler.</p>
               <button class="btn-detail">Detail</button>
             </div>
           </div>
@@ -835,16 +1005,25 @@
         <button class="arrow arrow-right">&#8250;</button>
       </div>
 
+      <div class="modal" id="eventModal">
+        <div class="modal-content">
+          <span class="close-btn" id="closeModal">&times;</span>
+          <img id="modalImage" src="" alt="" />
+          <h3 id="modalTitle"></h3>
+          <p id="modalDesc"></p>
+        </div>
+      </div>
+
       <script>
         const slider = document.getElementById("slider");
-        const cards = document.querySelectorAll(".event-card");
-        let index = 1; // mulai dari kartu kedua (tengah)
+        const sliderCards = document.querySelectorAll(".event-card");
+        let index = 1;
 
         function updateActiveCard() {
-          cards.forEach((card) => card.classList.remove("active"));
-          cards[index].classList.add("active");
+          sliderCards.forEach((card) => card.classList.remove("active"));
+          sliderCards[index].classList.add("active");
 
-          const cardWidth = cards[0].offsetWidth + 20; // width + margin
+          const cardWidth = sliderCards[0].offsetWidth + 20;
           const offset = slider.parentElement.offsetWidth / 2 - cardWidth / 2;
           slider.style.transform = `translateX(${
             -index * cardWidth + offset
@@ -852,17 +1031,44 @@
         }
 
         document.querySelector(".arrow-left").addEventListener("click", () => {
-          index = (index - 1 + cards.length) % cards.length;
+          index = (index - 1 + sliderCards.length) % sliderCards.length;
           updateActiveCard();
         });
 
         document.querySelector(".arrow-right").addEventListener("click", () => {
-          index = (index + 1) % cards.length;
+          index = (index + 1) % sliderCards.length;
           updateActiveCard();
         });
 
         window.addEventListener("resize", updateActiveCard);
         updateActiveCard();
+
+        // Modal logic
+        const modal = document.getElementById("eventModal");
+        const closeModal = document.getElementById("closeModal");
+        const modalImg = document.getElementById("modalImage");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalDesc = document.getElementById("modalDesc");
+
+        document.querySelectorAll(".btn-detail").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const card = btn.closest(".event-card");
+            modalImg.src = card.dataset.img;
+            modalTitle.textContent = card.dataset.title;
+            modalDesc.textContent = card.dataset.desc;
+            modal.style.display = "flex";
+          });
+        });
+
+        closeModal.addEventListener("click", () => {
+          modal.style.display = "none";
+        });
+
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.style.display = "none";
+          }
+        });
       </script>
     </div>
 
@@ -877,10 +1083,8 @@
           display: flex;
           flex-direction: column;
           align-items: center;
-          
         }
 
-        /* Dekorasi absolut */
         .kiri-atas {
           position: absolute;
           top: -120px;
@@ -901,7 +1105,6 @@
           height: auto;
         }
 
-        /* Judul */
         .cara-beli h2 {
           font-size: 1.8rem;
           font-weight: bold;
@@ -909,11 +1112,11 @@
           text-align: center;
           position: relative;
           margin-bottom: 40px;
-          z-index: 1; /* biar di atas dekorasi */
+          z-index: 1;
         }
 
         .cara-beli h2 span {
-          color: #3b82f6; /* biru */
+          color: #3b82f6;
         }
 
         .cara-beli h2::after {
@@ -926,7 +1129,6 @@
           border-radius: 2px;
         }
 
-        /* Kotak langkah */
         .steps-container {
           background: white;
           border-radius: 12px;
@@ -977,15 +1179,13 @@
         }
       </style>
 
-      <!-- Dekorasi -->
       <div class="kiri-atas">
-        <img src="/Rectangle 4034.png" alt="Dekorasi Kiri Atas" />
+        <img src="/img/dekorasi-kiri.png" alt="Dekorasi Kiri Atas" />
       </div>
       <div class="kanan-bawah-dekorasi">
-        <img src="/Rectangle 4031.png" alt="Dekorasi Kanan Bawah" />
+        <img src="/img/dekorasi-kanan.png" alt="Dekorasi Kanan Bawah" />
       </div>
 
-      <!-- Konten -->
       <h2>CARA <span>MEMBELI TIKET</span></h2>
       <div class="steps-container">
         <div class="step">
@@ -1012,449 +1212,441 @@
         </div>
       </div>
     </div>
+
     <div class="galeri-kegiatan">
-        <h2>GALERI KEGIATAN</h2>
+      <h2>GALERI KEGIATAN</h2>
 
-        <style>
-            .galeri-kegiatan {
-                text-align: center;
-                padding: 40px 0;
-                background-color: #f8f9fa;
-            }
+      <style>
+        .galeri-kegiatan {
+          text-align: center;
+          padding: 40px 0;
+          background-color: #f8f9fa;
+        }
 
-            .galeri-kegiatan h2 {
-                font-size: 1.5rem;
-                font-weight: bold;
-                margin-bottom: 30px;
-                color: #1a1a1a;
-                letter-spacing: 1px;
-            }
+        .galeri-kegiatan h2 {
+          font-size: 1.5rem;
+          font-weight: bold;
+          margin-bottom: 30px;
+          color: #1a1a1a;
+          letter-spacing: 1px;
+        }
 
-            .galeri-wrapper {
-                overflow: hidden;
-                width: 100%;
-                position: relative;
-                mask: linear-gradient(90deg, 
-                    transparent 0%, 
-                    black 5%, 
-                    black 95%, 
-                    transparent 100%);
-                -webkit-mask: linear-gradient(90deg, 
-                    transparent 0%, 
-                    black 5%, 
-                    black 95%, 
-                    transparent 100%);
-            }
+        .galeri-wrapper {
+          overflow: hidden;
+          width: 100%;
+          position: relative;
+          mask: linear-gradient(
+            90deg,
+            transparent 0%,
+            black 5%,
+            black 95%,
+            transparent 100%
+          );
+          -webkit-mask: linear-gradient(
+            90deg,
+            transparent 0%,
+            black 5%,
+            black 95%,
+            transparent 100%
+          );
+        }
 
-            .galeri-container {
-                display: flex;
-                flex-wrap: nowrap;
-                gap: 20px;
-                padding: 10px 0;
-                animation: scrollGaleri 30s linear infinite;
-                width: fit-content;
-            }
+        .galeri-container {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 20px;
+          padding: 10px 0;
+          animation: scrollGaleri 30s linear infinite;
+          width: fit-content;
+        }
 
-            .galeri-container img {
-                flex-shrink: 0;
-                width: 350px;
-                height: 230px;
-                object-fit: cover;
-                border-radius: 12px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-                transition: transform 0.3s ease;
-            }
+        .galeri-container img {
+          flex-shrink: 0;
+          width: 350px;
+          height: 230px;
+          object-fit: cover;
+          border-radius: 12px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease;
+        }
 
-            .galeri-container img:hover {
-                transform: scale(1.05);
-            }
+        .galeri-container img:hover {
+          transform: scale(1.05);
+        }
 
-            /* Pause animasi saat hover */
-            .galeri-wrapper:hover .galeri-container {
-                animation-play-state: paused !important;
-            }
+        .galeri-wrapper:hover .galeri-container {
+          animation-play-state: paused !important;
+        }
 
-            @keyframes scrollGaleri {
-                0% {
-                    transform: translateX(0);
-                }
-                100% {
-                    transform: translateX(-50%);
-                }
-            }
+        @keyframes scrollGaleri {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
 
-            /* Responsive design */
-            @media (max-width: 768px) {
-                .galeri-container img {
-                    width: 280px;
-                    height: 180px;
-                }
-                
-                .galeri-kegiatan h2 {
-                    font-size: 1.3rem;
-                }
-            }
+        @media (max-width: 768px) {
+          .galeri-container img {
+            width: 280px;
+            height: 180px;
+          }
 
-            @media (max-width: 480px) {
-                .galeri-container img {
-                    width: 250px;
-                    height: 160px;
-                }
-                
-                .galeri-container {
-                    gap: 15px;
-                }
-            }
-        </style>
+          .galeri-kegiatan h2 {
+            font-size: 1.3rem;
+          }
+        }
 
-        <div class="galeri-wrapper">
-            <div class="galeri-container" id="galeri">
-                <!-- Set pertama gambar -->
-                <img src="/1 (4).png" alt="Kegiatan 1">
-                <img src="/1 (6).png" alt="Kegiatan 2">
-                <img src="/1 (5).png" alt="Kegiatan 3">
-                <img src="/1 (4).png" alt="Kegiatan 4">
-                
-                <!-- Set kedua gambar untuk loop seamless -->
-                <img src="/1 (5).png" alt="Kegiatan 1">
-                <img src="/1 (6).png" alt="Kegiatan 2">
-                <img src="/1 (5).png" alt="Kegiatan 3">
-                <img src="/1 (4).png" alt="Kegiatan 4">
-            </div>
+        @media (max-width: 480px) {
+          .galeri-container img {
+            width: 250px;
+            height: 160px;
+          }
+
+          .galeri-container {
+            gap: 15px;
+          }
+        }
+      </style>
+
+      <div class="galeri-wrapper">
+        <div class="galeri-container" id="galeri">
+          <img src="/img/silder1.png" alt="Kegiatan 1" />
+          <img src="/img/slider2.png" alt="Kegiatan 2" />
+          <img src="/img/slider3.png" alt="Kegiatan 3" />
+          <img src="/img/slider4.png" alt="Kegiatan 4" />
+          <img src="/img/slider5.png" alt="Kegiatan 1" />
+          <img src="/img/slider6.png" alt="Kegiatan 2" />
+          <img src="/img/slider7.png" alt="Kegiatan 3" />
+          <img src="/img/slider8.png" alt="Kegiatan 4" />
         </div>
+      </div>
     </div>
 
     <script>
-        // Auto-pause saat tidak terlihat (performance optimization)
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                const galeriContainer = document.querySelector('.galeri-container');
-                if (entry.isIntersecting) {
-                    galeriContainer.style.animationPlayState = 'running';
-                } else {
-                    galeriContainer.style.animationPlayState = 'paused';
-                }
-            });
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const galeriContainer = document.querySelector(".galeri-container");
+          if (entry.isIntersecting) {
+            galeriContainer.style.animationPlayState = "running";
+          } else {
+            galeriContainer.style.animationPlayState = "paused";
+          }
         });
-
-        observer.observe(document.querySelector('.galeri-wrapper'));
+      });
+      observer.observe(document.querySelector(".galeri-wrapper"));
     </script>
 
-
-<section class="faq-section">
-  <h2>FAQ</h2>
-  <div class="faq-item">
-    <button class="faq-question">
-      Apakah Festival Enem Bisa digunakan untuk Umum?
-    </button>
-    <div class="faq-answer">
-      Ya, Festival Enem terbuka untuk umum selama mematuhi syarat dan ketentuan yang berlaku.
-    </div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">
-      Bagaimana Cara Menggunakan Tiket di Festival Enem?
-    </button>
-    <div class="faq-answer">
-      Cukup tunjukkan tiket digital atau cetak di pintu masuk, kemudian petugas akan memindai QR code.
-    </div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question">
-      Dimana saya bisa membeli tiket Festival Enem?
-    </button>
-    <div class="faq-answer">
-      Tiket bisa dibeli di website resmi Festival Enem atau melalui mitra penjualan tiket resmi.
-    </div>
-  </div>
-</section>
-
-<style>
-  .faq-section {
-    height: 100dvh;
-    height: 100vh;
-    padding: 50px 20px;
-    position: relative;
-    text-align: center;
-    background: url('/1\ \(1\)\ copy.png');
-    color: white;
-  }
-
-  .faq-section h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    position: relative;
-    display: inline-block;
-  }
-
-  .faq-section h2::after {
-    content: '';
-    display: block;
-    width: 50%;
-    height: 3px;
-    background: white;
-    margin: 5px auto 0;
-    border-radius: 2px;
-  }
-
-  .faq-item {
-    max-width: 700px;
-    margin: 10px auto;
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    text-align: left;
-  }
-
-  .faq-question {
-    background: none;
-    border: none;
-    width: 100%;
-    padding: 15px 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    color: #333;
-  }
-
-  .arrow {
-    transition: transform 0.3s ease;
-    font-size: 1rem;
-    margin-left: 10px;
-  }
-
-  .faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    padding: 0 20px;
-    background: #f9f9f9;
-    font-size: 0.95rem;
-    color: #555;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-  }
-
-  .faq-item.active .faq-answer {
-    max-height: 200px;
-    padding: 15px 20px;
-  }
-
-  .faq-item.active .arrow {
-    transform: rotate(180deg);
-  }
-</style>
-
-<section class="event-section">
-  <div class="overlay">
-    <h1>Siap Mengikuti Event Lainnya?</h1>
-    <p>Temukan Festival dan tiket lainnya di Festival Enem</p>
-    <div class="btn-group">
-      <a href="#" class="btn btn-light">Beli Tiket</a>
-      <a href="#" class="btn btn-dark">Lihat Event Lainnya</a>
-    </div>
-  </div>
-</section>
-
-<style>
-  .event-section {
-    position: relative;
-    background: url('/1\ \(2\)\ copy.png') center/cover no-repeat;
-    height: 100dvh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .overlay {
-    text-align: center;
-    color: white;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
-  }
-
-  .overlay h1 {
-    font-size: 2.2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-
-  .overlay p {
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
-
-  .btn-group {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-  }
-
-  .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: bold;
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: background 0.3s ease;
-  }
-
-  .btn-light {
-    background: #d6b7ff;
-    color: #000;
-  }
-
-  .btn-dark {
-    background: #6c3bff;
-    color: white;
-  }
-
-  .btn-light:hover {
-    background: #c69aff;
-  }
-
-  .btn-dark:hover {
-    background: #5a2de0;
-  }
-</style>
-
-<script>
-  document.querySelectorAll('.faq-question').forEach(button => {
-    button.addEventListener('click', () => {
-      const item = button.parentElement;
-      item.classList.toggle('active');
-    });
-  });
-</script>
-
-<footer class="footer">
-  <div class="footer-container">
-    <!-- Tautan Cepat -->
-    <div class="footer-col">
-      <h3>Tautan Cepat</h3>
-      <div class="footer-links">
-        <a href="#">Beranda</a>
-        <a href="#">Tentang</a>
-        <a href="#">Event</a>
-        <a href="#">Kontak</a>
+    <section class="faq-section">
+      <h2>FAQ</h2>
+      <div class="faq-item">
+        <button class="faq-question">
+          Apakah Festival Enem Bisa digunakan untuk Umum?
+          <span class="arrow">⌄</span>
+        </button>
+        <div class="faq-answer">
+          Ya, Festival Enem terbuka untuk umum selama mematuhi syarat dan
+          ketentuan yang berlaku.
+        </div>
       </div>
-    </div>
 
-    <!-- Alamat -->
-    <div class="footer-col">
-      <h3>Alamat</h3>
-      <p>JL. PB. SUDIRMAN NO. 114 TANGGUL–JEMBER,<br>
-         Tanggul Kulon, Kec. Tanggul, Kab. Jember<br>
-         Prov. Jawa Timur</p>
-      <p>📧 eventenem@smkn6jember.sch.id</p>
-      <p>📞 +123 445 789</p>
-    </div>
-
-    <!-- Follow Us -->
-    <div class="footer-col">
-      <h3>Follow Us</h3>
-      <div class="social-icons">
-        <a href="#"><img src="icon-instagram.png" alt="Instagram"></a>
-        <a href="#"><img src="icon-facebook.png" alt="Facebook"></a>
-        <a href="#"><img src="icon-tiktok.png" alt="TikTok"></a>
-        <a href="#"><img src="icon-youtube.png" alt="YouTube"></a>
+      <div class="faq-item">
+        <button class="faq-question">
+          Bagaimana Cara Menggunakan Tiket di Festival Enem?
+          <span class="arrow">⌄</span>
+        </button>
+        <div class="faq-answer">
+          Cukup tunjukkan tiket digital atau cetak di pintu masuk, kemudian
+          petugas akan memindai QR code.
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="footer-bottom">
-    <p>© 2025 Event Enem All Rights Reserved</p>
-  </div>
-</footer>
+      <div class="faq-item">
+        <button class="faq-question">
+          Dimana saya bisa membeli tiket Festival Enem?
+          <span class="arrow">⌄</span>
+        </button>
+        <div class="faq-answer">
+          Tiket bisa dibeli di website resmi Festival Enem atau melalui mitra
+          penjualan tiket resmi.
+        </div>
+      </div>
+    </section>
 
-<style>
-  .footer {
-    background: #1e1e1e;
-    color: white;
-    padding: 40px 20px 10px;
-    font-family: Arial, sans-serif;
-  }
+    <style>
+      .faq-section {
+        height: 100dvh;
+        height: 100vh;
+        padding: 50px 20px;
+        position: relative;
+        text-align: center;
+        background: url("/img/faq.png") center/cover no-repeat;
+        color: white;
+      }
 
-  .footer-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 30px;
-    max-width: 1200px;
-    margin: auto;
-  }
+      .faq-section h2 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+      }
 
-  .footer-col {
-    flex: 1;
-    min-width: 200px;
-  }
+      .faq-section h2::after {
+        content: "";
+        display: block;
+        width: 50%;
+        height: 3px;
+        background: white;
+        margin: 5px auto 0;
+        border-radius: 2px;
+      }
 
-  .footer-col h3 {
-    margin-bottom: 10px;
-    position: relative;
-    font-weight: bold;
-  }
+      .faq-item {
+        max-width: 700px;
+        margin: 10px auto;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        text-align: left;
+      }
 
-  .footer-col h3::after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 3px;
-    background: #7b5cff;
-    margin-top: 5px;
-  }
+      .faq-question {
+        background: none;
+        border: none;
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        color: #333;
+      }
 
-  /* Kolom Tautan Cepat */
-  .footer-links {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+      .arrow {
+        transition: transform 0.3s ease;
+        font-size: 1rem;
+        margin-left: 10px;
+      }
 
-  .footer-links a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 20px;
+        background: #f9f9f9;
+        font-size: 0.95rem;
+        color: #555;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+      }
 
-  .footer-links a:hover {
-    color: #7b5cff;
-  }
+      .faq-item.active .faq-answer {
+        max-height: 200px;
+        padding: 15px 20px;
+      }
 
-  /* Sosial Media */
-  .social-icons a img {
-    width: 24px;
-    margin-right: 10px;
-    transition: opacity 0.3s;
-  }
+      .faq-item.active .arrow {
+        transform: rotate(180deg);
+      }
+    </style>
 
-  .social-icons a img:hover {
-    opacity: 0.7;
-  }
+    <section class="event-section">
+      <div class="overlay">
+        <h1>Siap Mengikuti Event Lainnya?</h1>
+        <p>Temukan Festival dan tiket lainnya di Festival Enem</p>
+        <div class="btn-group">
+          <a href="#" class="btn btn-light">Beli Tiket</a>
+          <a href="#" class="btn btn-dark">Lihat Event Lainnya</a>
+        </div>
+      </div>
+    </section>
 
-  /* Bawah Footer */
-  .footer-bottom {
-    border-top: 1px solid #444;
-    text-align: center;
-    padding-top: 10px;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    color: #ccc;
-  }
-</style>
+    <style>
+      .event-section {
+        position: relative;
+        background: url("img/bagian\\ bawah\\ di\\ footer.png") center/cover no-repeat;
+        height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .overlay {
+        text-align: center;
+        color: white;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+      }
+
+      .overlay h1 {
+        font-size: 2.2rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .overlay p {
+        font-size: 1rem;
+        margin-bottom: 20px;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: background 0.3s ease;
+      }
+
+      .btn-light {
+        background: #d6b7ff;
+        color: #000;
+      }
+
+      .btn-dark {
+        background: #6c3bff;
+        color: white;
+      }
+
+      .btn-light:hover {
+        background: #c69aff;
+      }
+
+      .btn-dark:hover {
+        background: #5a2de0;
+      }
+    </style>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>Tautan Cepat</h3>
+          <div class="footer-links">
+            <a href="#">Beranda</a>
+            <a href="#">Tentang</a>
+            <a href="#">Event</a>
+            <a href="#">Kontak</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Alamat</h3>
+          <p>
+            JL. PB. SUDIRMAN NO. 114 TANGGUL--JEMBER,<br />
+            Tanggul Kulon, Kec. Tanggul, Kab. Jember<br />
+            Prov. Jawa Timur
+          </p>
+          <p>📧 eventenem@smkn6jember.sch.id</p>
+          <p>📞 +123 445 789</p>
+        </div>
+
+        <div class="footer-col">
+          <h3>Follow Us</h3>
+          <div class="social-icons">
+            <a href="#"><img src="icon-instagram.png" alt="Instagram" /></a>
+            <a href="#"><img src="icon-facebook.png" alt="Facebook" /></a>
+            <a href="#"><img src="icon-tiktok.png" alt="TikTok" /></a>
+            <a href="#"><img src="icon-youtube.png" alt="YouTube" /></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 Event Enem All Rights Reserved</p>
+      </div>
+    </footer>
+
+    <style>
+      .footer {
+        background: #1e1e1e;
+        color: white;
+        padding: 40px 20px 10px;
+        font-family: Arial, sans-serif;
+      }
+
+      .footer-container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 30px;
+        max-width: 1200px;
+        margin: auto;
+      }
+
+      .footer-col {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .footer-col h3 {
+        margin-bottom: 10px;
+        position: relative;
+        font-weight: bold;
+      }
+
+      .footer-col h3::after {
+        content: "";
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #7b5cff;
+        margin-top: 5px;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .footer-links a {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      .footer-links a:hover {
+        color: #7b5cff;
+      }
+
+      .social-icons a img {
+        width: 24px;
+        margin-right: 10px;
+        transition: opacity 0.3s;
+      }
+
+      .social-icons a img:hover {
+        opacity: 0.7;
+      }
+
+      .footer-bottom {
+        border-top: 1px solid #444;
+        text-align: center;
+        padding-top: 10px;
+        margin-top: 20px;
+        font-size: 0.9rem;
+        color: #ccc;
+      }
+    </style>
 
     <script>
+      // Mobile menu toggle
       document
         .getElementById("menu-toggle")
         .addEventListener("click", function () {
           document.getElementById("menu").classList.toggle("show");
         });
 
+      // Countdown
       function startCountdown(endTime) {
         const timerEl = document.getElementById("timer");
 
@@ -1490,71 +1682,147 @@
         const interval = setInterval(updateTimer, 1000);
       }
 
-      // Contoh: hitung mundur 264 hari, 13 jam, 34 menit, 39 detik dari sekarang
+      // Contoh: hitung mundur 34 menit 39 detik dari sekarang
       const targetDate = new Date();
-      targetDate.setDate(targetDate.getDate() + 0);
-      targetDate.setHours(targetDate.getHours() + 0);
       targetDate.setMinutes(targetDate.getMinutes() + 34);
       targetDate.setSeconds(targetDate.getSeconds() + 39);
-
       startCountdown(targetDate.getTime());
 
-      // Pagination Script
-      const cardss = document.querySelectorAll('#card-container .card');
-      const prevBtn = document.getElementById('prev-btn');
-      const nextBtn = document.getElementById('next-btn');
-      const pagination = document.getElementById('pagination');
-      const itemsPerPage = 3; // 3 card per halaman untuk ringan
-      const totalPages = Math.ceil(cards.length / itemsPerPage);
+      // Pagination
+      const cardss = document.querySelectorAll("#card-container .card");
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn");
+      const pagination = document.getElementById("pagination");
+      const itemsPerPage = 3;
+      const totalPages = Math.ceil(cardss.length / itemsPerPage);
       let currentPage = 1;
 
       function showPage(page) {
         cardss.forEach((card, index) => {
           if (index >= (page - 1) * itemsPerPage && index < page * itemsPerPage) {
-            card.classList.remove('hidden');
+            card.classList.remove("hidden");
           } else {
-            card.classList.add('hidden');
+            card.classList.add("hidden");
           }
         });
 
         prevBtn.disabled = page === 1;
         nextBtn.disabled = page === totalPages;
 
-        document.querySelectorAll('.pagination button.page-btn').forEach(btn => {
-          btn.classList.remove('active');
-          if (parseInt(btn.textContent) === page) {
-            btn.classList.add('active');
-          }
+        document.querySelectorAll(".pagination button.page-btn").forEach((btn) => {
+          btn.classList.remove("active");
+          if (parseInt(btn.textContent) === page) btn.classList.add("active");
         });
       }
 
       for (let i = 1; i <= totalPages; i++) {
-        const pageBtn = document.createElement('button');
+        const pageBtn = document.createElement("button");
         pageBtn.textContent = i;
-        pageBtn.classList.add('page-btn');
-        pageBtn.addEventListener('click', () => {
+        pageBtn.classList.add("page-btn");
+        pageBtn.addEventListener("click", () => {
           currentPage = i;
           showPage(currentPage);
         });
         pagination.insertBefore(pageBtn, nextBtn);
       }
 
-      prevBtn.addEventListener('click', () => {
+      prevBtn.addEventListener("click", () => {
         if (currentPage > 1) {
           currentPage--;
           showPage(currentPage);
         }
       });
 
-      nextBtn.addEventListener('click', () => {
+      nextBtn.addEventListener("click", () => {
         if (currentPage < totalPages) {
           currentPage++;
           showPage(currentPage);
         }
       });
 
-      cards.forEach(card => card.classList.add('hidden'));
+      cardss.forEach((card) => card.classList.add("hidden"));
       showPage(currentPage);
+
+      // FAQ toggle
+      document.querySelectorAll(".faq-question").forEach((button) => {
+        button.addEventListener("click", () => {
+          const item = button.parentElement;
+          item.classList.toggle("active");
+        });
+      });
+
+      // Fake Auth (localStorage)
+      const AUTH_KEY = "fe_loggedIn";
+      const NAME_KEY = "fe_userName";
+
+      const linkLogin = document.getElementById("link-login");
+      const linkRegister = document.getElementById("link-register");
+      const profile = document.getElementById("profile");
+      const profileName = document.getElementById("profileName");
+      const avatar = document.getElementById("avatar");
+      const dropdown = document.getElementById("profileDropdown");
+      const btnLogout = document.getElementById("btn-logout");
+      const goDashboard = document.getElementById("goDashboard");
+
+      function isLoggedIn() {
+        return localStorage.getItem(AUTH_KEY) === "true";
+      }
+
+      function getNameInitial(name) {
+        if (!name) return "U";
+        const words = name.trim().split(" ").filter(Boolean);
+        const first = words[0]?.[0] || "";
+        const second = words[1]?.[0] || "";
+        const init = (first + second).toUpperCase();
+        return init || "U";
+      }
+
+      function renderAuthUI() {
+        const logged = isLoggedIn();
+        const name = localStorage.getItem(NAME_KEY) || "User";
+
+        if (linkLogin && linkRegister) {
+          linkLogin.style.display = logged ? "none" : "inline-flex";
+          linkRegister.style.display = logged ? "none" : "inline-flex";
+        }
+
+        if (profile) {
+          if (logged) {
+            profile.classList.add("show");
+            profileName.textContent = name;
+            avatar.textContent = getNameInitial(name);
+          } else {
+            profile.classList.remove("show");
+            dropdown?.classList.remove("show");
+          }
+        }
+      }
+
+      // Dropdown
+      profile?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle("show");
+      });
+      document.addEventListener("click", (e) => {
+        if (!profile.contains(e.target)) dropdown.classList.remove("show");
+      });
+
+      // Dashboard dummy
+      goDashboard?.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = "user.html";
+        dropdown.classList.remove("show");
+      });
+
+      // Logout
+      btnLogout?.addEventListener("click", () => {
+        localStorage.removeItem(AUTH_KEY);
+        localStorage.removeItem(NAME_KEY);
+        dropdown.classList.remove("show");
+        renderAuthUI();
+      });
+
+      renderAuthUI();
     </script>
   </body>
 </html>

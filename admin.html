@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard Admin - Tiket Event</title>
+  <style>
+    :root{
+      --bg:#f7f7fb;
+      --surface:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --border:#e5e7eb;
+      --primary:#7c3aed;     /* ungu */
+      --primary-2:#5b21b6;   /* ungu tua */
+      --success:#16a34a;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --shadow: 0 10px 30px rgba(16,24,40,.08), 0 2px 6px rgba(16,24,40,.06);
+      --radius:16px;
+      --radius-lg:20px;
+      --grad: linear-gradient(90deg, var(--primary), var(--primary-2));
+      --soft-grad: linear-gradient(145deg, rgba(124,58,237,.18), rgba(91,33,182,.18));
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background:var(--bg);color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+      line-height:1.55;
+    }
+
+    /* Layout */
+    .app{
+      display:grid;grid-template-columns:260px 1fr;min-height:100vh;
+    }
+    @media (max-width: 980px){ .app{grid-template-columns:1fr} }
+
+    /* Sidebar */
+    .sidebar{
+      position:relative;
+      background:#fff;border-right:1px solid var(--border);
+      padding:14px;display:flex;flex-direction:column;gap:10px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;padding:8px 10px;margin-bottom:6px
+    }
+    .logo{
+      width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+      background:var(--soft-grad);border:1px solid rgba(124,58,237,.25);font-weight:900;color:#4c1d95
+    }
+    .brand .name{font-weight:900}
+    nav{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    .nav-link{
+      display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;
+      color:#111827;text-decoration:none;font-weight:800;border:1px solid transparent;
+    }
+    .nav-link svg{flex:0 0 auto}
+    .nav-link.active{background:#f5f3ff;border-color:rgba(124,58,237,.35);color:var(--primary)}
+    .nav-link:hover{background:#fafafa;border-color:#eef2f7}
+    .sidebar .sep{height:1px;background:#f1f5f9;margin:6px 0}
+
+    /* Topbar */
+    .topbar-wrap{
+      background:var(--grad);
+      box-shadow: inset 0 -12px 22px rgba(0,0,0,.08);
+    }
+    .topbar{
+      display:flex;align-items:center;gap:16px;
+      width:min(1200px, 94vw);margin-inline:auto;padding:14px 0;
+      color:#fff;
+    }
+    .menu-btn{
+      display:none;align-items:center;justify-content:center;
+      width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.35);
+      background:rgba(255,255,255,.12);cursor:pointer;color:#fff
+    }
+    @media (max-width: 980px){ .menu-btn{display:inline-flex} }
+
+    .search{
+      flex:1;display:flex;align-items:center;gap:10px;background:#fff;color:#111827;
+      border-radius:999px;padding:8px 12px;box-shadow:var(--shadow)
+    }
+    .search input{
+      border:0;outline:none;flex:1;background:transparent;font-size:14px
+    }
+    .actions{display:flex;align-items:center;gap:12px;margin-left:auto}
+    .icon-btn{
+      width:36px;height:36px;border-radius:999px;border:1px solid rgba(255,255,255,.35);
+      background:rgba(255,255,255,.12);display:grid;place-items:center;color:#fff;cursor:pointer
+    }
+    .profile{
+      display:flex;align-items:center;gap:10px;padding:6px 10px;border-radius:999px;
+      background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3)
+    }
+    .avatar{
+      width:34px;height:34px;border-radius:999px;background:#fff;color:#6d28d9;
+      font-weight:900;display:grid;place-items:center
+    }
+    .profile .meta{line-height:1.15;font-size:12px}
+
+    /* Main content area */
+    .main{
+      display:flex;flex-direction:column;min-width:0;
+    }
+    .content{
+      width:min(1200px, 94vw);margin-inline:auto;padding:20px 0 60px;
+    }
+    .page{display:none}
+    .page.active{display:block}
+
+    /* Cards metric */
+    .metrics{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:10px;margin-bottom:18px
+    }
+    @media (max-width: 860px){ .metrics{grid-template-columns:1fr} }
+    .metric{
+      background:var(--soft-grad);color:#fff;border-radius:18px;padding:16px 18px;
+      display:flex;align-items:center;gap:12px;border:1px solid rgba(124,58,237,.25)
+    }
+    .metric .bag{
+      width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+      background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35)
+    }
+    .metric h3{margin:0 0 4px;font-size:14px;font-weight:900;color:#f1f5f9}
+    .metric .num{font-size:28px;font-weight:900}
+
+    /* Tables */
+    .card{
+      background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .card .title{
+      padding:14px 16px;font-weight:900;border-bottom:1px solid #f1f5f9
+    }
+    .table-wrap{overflow:auto}
+    table{
+      border-collapse:separate;border-spacing:0;width:100%;
+    }
+    th, td{
+      text-align:left;padding:12px 14px;border-bottom:1px solid #f1f5f9;white-space:nowrap
+    }
+    th{color:#334155;font-size:13px}
+    td{font-size:14px}
+
+    .right{
+      display:flex;justify-content:flex-end;gap:8px
+    }
+    .action{
+      width:32px;height:32px;border-radius:8px;border:0;cursor:pointer;color:#fff;
+      display:grid;place-items:center
+    }
+    .ok{background:#22c55e}
+    .del{background:#ef4444}
+    .warn{background:#f59e0b}
+    .view{background:#3b82f6}
+
+    .btn{
+      appearance:none;border:0;border-radius:12px;padding:10px 14px;font-weight:900;cursor:pointer
+    }
+    .btn.primary{background:var(--grad);color:#fff;box-shadow:0 8px 18px rgba(124,58,237,.35)}
+    .btn.ghost{background:#fff;border:1px solid var(--border)}
+
+    .section-title{
+      font-size:20px;font-weight:900;margin:16px 0 8px
+    }
+    .underline{width:120px;height:3px;border-radius:3px;background:var(--primary);opacity:.5;margin-bottom:10px}
+
+    /* Tickets stock chip */
+    .stock{
+      display:inline-flex;align-items:center;gap:8px
+    }
+    .bar{
+      width:120px;height:10px;border-radius:999px;background:#f1f5f9;overflow:hidden;border:1px solid #e5e7eb
+    }
+    .bar > i{display:block;height:100%;background:#22c55e}
+    .stock .cap{font-weight:800;color:#0b1220}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;display:none;place-items:center;padding:20px;z-index:60}
+    .modal.show{display:grid}
+    .backdrop{position:absolute;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(2px)}
+    .dialog{
+      position:relative;z-index:1;background:#fff;border-radius:16px;border:1px solid var(--border);
+      box-shadow:0 30px 70px rgba(0,0,0,.25);width:min(520px, 94vw);overflow:hidden
+    }
+    .dialog .head{padding:12px 14px;border-bottom:1px solid #f1f5f9;font-weight:900}
+    .dialog .body{padding:14px}
+    .dialog .foot{padding:12px 14px;border-top:1px solid #f1f5f9;display:flex;justify-content:flex-end;gap:10px}
+    .dialog label{font-weight:800;display:block;margin-bottom:6px}
+    .dialog input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px}
+    .dialog .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .close-x{position:absolute;right:10px;top:8px;border:1px solid #e5e7eb;width:34px;height:34px;border-radius:10px;background:#fff;cursor:pointer}
+
+    /* Mobile sidebar overlay */
+    .overlay{display:none}
+    @media (max-width:980px){
+      .sidebar{
+        position:fixed;inset:0 auto 0 0;width:min(88vw, 320px);transform:translateX(-105%);
+        transition:.2s ease;background:#fff;z-index:70
+      }
+      .sidebar.show{transform:none}
+      .overlay{
+        display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(2px);z-index:65
+      }
+      .overlay.show{display:block}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar" aria-label="Navigasi">
+      <div class="brand">
+        <div class="logo">EP</div>
+        <div class="name">EPIM 2025 Admin</div>
+      </div>
+      <nav>
+        <a href="#dashboard" class="nav-link active" data-page="dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12l9-9 9 9v8a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2v-8z" stroke="#7c3aed" stroke-width="2" stroke-linejoin="round"/></svg>
+          Beranda
+        </a>
+        <a href="#orders" class="nav-link" data-page="orders">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 7h13M8 12h13M8 17h13M3 7h.01M3 12h.01M3 17h.01" stroke="#7c3aed" stroke-width="2" stroke-linecap="round"/></svg>
+          Kelola Pesanan
+        </a>
+        <a href="#tickets" class="nav-link" data-page="tickets">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 7a2 2 0 0 1 2-2h6v3a2 2 0 1 0 0 4v3H6a2 2 0 0 1-2-2V7z" stroke="#7c3aed" stroke-width="2"/><path d="M12 5h6a2 2 0 0 1 2 2v6h-3a2 2 0 1 0-4 0h-3V5z" stroke="#7c3aed" stroke-width="2"/></svg>
+          Daftar Tiket
+        </a>
+      </nav>
+    </aside>
+    <div id="sidebarOverlay" class="overlay" aria-hidden="true"></div>
+
+    <!-- Main -->
+    <div class="main">
+      <!-- Topbar -->
+      <div class="topbar-wrap">
+        <div class="topbar">
+          <button id="menuBtn" class="menu-btn" aria-label="Buka menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <div class="search" role="search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#94a3b8" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/></svg>
+            <input id="searchInput" type="search" placeholder="Cari Pesanan" />
+          </div>
+
+          <div class="actions">
+            <button class="icon-btn" title="Pesan">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 8v8a2 2 0 0 1-2 2H8l-5 3V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="icon-btn" title="Notifikasi">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2a2 2 0 0 1-.6 1.4L4 17h5" stroke="#fff" stroke-width="2"/><path d="M10 20a2 2 0 0 0 4 0" stroke="#fff" stroke-width="2"/></svg>
+            </button>
+
+            <div class="profile">
+              <div class="avatar">HP</div>
+              <div class="meta">
+                <div style="font-weight:900">Handoko Putra</div>
+                <div>handoko@gmail.com</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <!-- Dashboard -->
+        <section id="dashboard" class="page active">
+          <h2 class="section-title">Data Pemesanan Tiket</h2>
+          <div class="underline"></div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="bag">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 7h12l1 13H5L6 7z" stroke="#fff" stroke-width="2"/><path d="M9 7a3 3 0 0 1 6 0" stroke="#fff" stroke-width="2"/>
+                </svg>
+              </div>
+              <div>
+                <h3>Jumlah Pesanan</h3>
+                <div class="num" id="mTotal">0</div>
+              </div>
+            </div>
+            <div class="metric">
+              <div class="bag">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 7h12l1 13H5L6 7z" stroke="#fff" stroke-width="2"/><path d="M9 7a3 3 0 0 1 6 0" stroke="#fff" stroke-width="2"/>
+                </svg>
+              </div>
+              <div>
+                <h3>Belum Dikonfirmasi</h3>
+                <div class="num" id="mPending">0</div>
+              </div>
+            </div>
+            <div class="metric">
+              <div class="bag">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                  <path d="M6 7h12l1 13H5L6 7z" stroke="#fff" stroke-width="2"/><path d="M9 7a3 3 0 0 1 6 0" stroke="#fff" stroke-width="2"/>
+                </svg>
+              </div>
+              <div>
+                <h3>Terkonfirmasi</h3>
+                <div class="num" id="mConfirmed">0</div>
+              </div>
+            </div>
+          </div>
+
+          <h2 class="section-title">Konfirmasi Pesanan</h2>
+          <div class="underline"></div>
+
+          <div class="card">
+            <div class="table-wrap">
+              <table id="previewTable">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>No Telepon</th>
+                    <th>Tiket</th>
+                    <th class="right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div style="padding:12px 14px">
+              <button class="btn primary" data-nav="orders">Lihat Semua Pesanan</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Orders -->
+        <section id="orders" class="page">
+          <h2 class="section-title">Daftar Pesanan</h2>
+          <div class="underline"></div>
+          <div class="card">
+            <div class="title">Semua Pesanan</div>
+            <div class="table-wrap">
+              <table id="ordersTable">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Email</th>
+                    <th>No Telepon</th>
+                    <th>Tiket</th>
+                    <th>Status</th>
+                    <th class="right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tickets -->
+        <section id="tickets" class="page">
+          <h2 class="section-title">Daftar Tiket</h2>
+          <div class="underline"></div>
+
+          <div style="display:flex;justify-content:flex-end;margin:8px 0 10px">
+            <button id="addTicket" class="btn primary">+ Tambah Tiket</button>
+          </div>
+
+          <div class="card">
+            <div class="title">Semua Event</div>
+            <div class="table-wrap">
+              <table id="ticketsTable">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Jenis Event</th>
+                    <th>Tanggal</th>
+                    <th>Stok</th>
+                    <th class="right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Edit/Add Ticket -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="backdrop" data-close></div>
+    <div class="dialog" role="dialog" aria-modal="true">
+      <button class="close-x" data-close>&times;</button>
+      <div class="head" id="modalTitle">Edit Tiket</div>
+      <div class="body">
+        <div class="row">
+          <div>
+            <label>Nama Event</label>
+            <input id="fName" type="text" />
+          </div>
+          <div>
+            <label>Jenis</label>
+            <input id="fType" type="text" placeholder="Tari / Musik / Teater" />
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div>
+            <label>Tanggal</label>
+            <input id="fDate" type="text" placeholder="Senin 12 Juli 2025" />
+          </div>
+          <div>
+            <label>Stok</label>
+            <input id="fStock" type="number" min="0" />
+          </div>
+        </div>
+      </div>
+      <div class="foot">
+        <button class="btn ghost" data-close>Batal</button>
+        <button id="saveTicket" class="btn primary">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ------- Data (localStorage) -------
+    const LS_ORDERS = "ep_orders_v1";
+    const LS_TICKETS = "ep_tickets_v1";
+
+    const initialOrders = [
+      {id:"o1", name:"Fahrur Rozi", email:"zero@gmail.com", phone:"0881036032352", ticket:"Regular 1x (Festival Tari Hardiknas)", qty:1, confirmed:false},
+      {id:"o2", name:"Bayu Ardiansyah", email:"bayz@gmail.com", phone:"0881036032352", ticket:"VIP 2x (Festival Tari Hardiknas)", qty:2, confirmed:false},
+      {id:"o3", name:"Afdanu Aprilan S.", email:"arsab@gmail.com", phone:"0881036032352", ticket:"VIP 2x (Festival Tari Hardiknas)", qty:2, confirmed:false},
+      {id:"o4", name:"Anas Maulana H.", email:"anas@gmail.com", phone:"0881036032352", ticket:"1x (Festival Tari Hardiknas)", qty:1, confirmed:true},
+      {id:"o5", name:"Radittya Ardiansyah", email:"ditzz@gmail.com", phone:"0881036032352", ticket:"1x (Festival Tari Hardiknas)", qty:1, confirmed:true}
+    ];
+
+    const initialTickets = [
+      {id:"t1", name:"Festival Tari Hardiknas", type:"Tari", date:"Senin 12 Juli 2025", stock:100},
+      {id:"t2", name:"Pementasan Wayang", type:"Teater", date:"Rabu 15 Agustus 2025", stock:10},
+      {id:"t3", name:"Pementasan Tari Saman", type:"Tari", date:"Rabu 15 Agustus 2025", stock:5},
+      {id:"t4", name:"Festival Kebudayaan Amerta", type:"Teater", date:"Rabu 15 Agustus 2025", stock:65},
+      {id:"t5", name:"Festival Angklung", type:"Musik", date:"Rabu 15 Agustus 2025", stock:60},
+      {id:"t6", name:"Lomba Paduan Suara", type:"Musik", date:"Rabu 15 Agustus 2025", stock:66}
+    ];
+
+    let orders = JSON.parse(localStorage.getItem(LS_ORDERS) || "null") || initialOrders;
+    let tickets = JSON.parse(localStorage.getItem(LS_TICKETS) || "null") || initialTickets;
+
+    const saveOrders = () => localStorage.setItem(LS_ORDERS, JSON.stringify(orders));
+    const saveTickets = () => localStorage.setItem(LS_TICKETS, JSON.stringify(tickets));
+
+    // ------- Helpers -------
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+    const fmt = n => new Intl.NumberFormat("id-ID").format(n);
+
+    function badgeStatus(confirmed){
+      return confirmed
+        ? `<span style="padding:4px 8px;border-radius:999px;background:#dcfce7;color:#166534;font-weight:800;font-size:12px;border:1px solid #86efac">Terkonfirmasi</span>`
+        : `<span style="padding:4px 8px;border-radius:999px;background:#fee2e2;color:#991b1b;font-weight:800;font-size:12px;border:1px solid #fecaca">Belum</span>`;
+    }
+
+    function stockColor(v){
+      if(v >= 60) return "#22c55e";
+      if(v >= 20) return "#f59e0b";
+      return "#ef4444";
+    }
+
+    // ------- Renderers -------
+    function renderMetrics(){
+      const total = orders.length;
+      const pending = orders.filter(o=>!o.confirmed).length;
+      const confirmed = total - pending;
+      $("#mTotal").textContent = total >= 100 ? "100+" : String(total);
+      $("#mPending").textContent = String(pending);
+      $("#mConfirmed").textContent = String(confirmed);
+    }
+
+    function renderPreviewTable(){
+      const tbody = $("#previewTable tbody");
+      const items = orders.slice(0, 5);
+      tbody.innerHTML = items.map((o, i) => `
+        <tr data-id="${o.id}">
+          <td>${i+1}</td>
+          <td>${o.name}</td>
+          <td>${o.email}</td>
+          <td>${o.phone}</td>
+          <td>${o.ticket}</td>
+          <td class="right">
+            <button class="action ok" title="Konfirmasi" data-act="confirm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m20 6-11 11L4 12" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="action del" title="Hapus" data-act="delete">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    let searchTerm = "";
+    function renderOrdersTable(){
+      const tbody = $("#ordersTable tbody");
+      const list = orders.filter(o => {
+        const s = (o.name + " " + o.email + " " + o.phone + " " + o.ticket).toLowerCase();
+        return s.includes(searchTerm.toLowerCase());
+      });
+      tbody.innerHTML = list.map((o, i) => `
+        <tr data-id="${o.id}">
+          <td>${i+1}</td>
+          <td>${o.name}</td>
+          <td>${o.email}</td>
+          <td>${o.phone}</td>
+          <td>${o.ticket}</td>
+          <td>${badgeStatus(o.confirmed)}</td>
+          <td class="right">
+            <button class="action ok" title="Konfirmasi" data-act="confirm">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="m20 6-11 11L4 12" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="action del" title="Hapus" data-act="delete">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderTicketsTable(){
+      const tbody = $("#ticketsTable tbody");
+      tbody.innerHTML = tickets.map((t,i) => {
+        const color = stockColor(t.stock);
+        return `
+          <tr data-id="${t.id}">
+            <td>${i+1}</td>
+            <td>${t.name}</td>
+            <td>${t.type}</td>
+            <td>${t.date}</td>
+            <td>
+              <span class="stock">
+                <span class="bar"><i style="width:${Math.min(100, t.stock)}%; background:${color}"></i></span>
+                <span class="cap">${fmt(t.stock)}</span>
+              </span>
+            </td>
+            <td class="right">
+              <button class="action warn" title="Edit" data-act="edit">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10-10-4-4L4 16v4z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+              </button>
+              <button class="action del" title="Hapus" data-act="delete">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderAll(){
+      renderMetrics();
+      renderPreviewTable();
+      renderOrdersTable();
+      renderTicketsTable();
+    }
+
+    // ------- Actions -------
+    // Confirm/Delete on preview and orders tables
+    document.addEventListener("click", (e)=>{
+      const btn = e.target.closest("[data-act]");
+      if(!btn) return;
+      const tr = btn.closest("tr");
+      const id = tr?.dataset.id;
+      if(!id) return;
+      const act = btn.dataset.act;
+
+      if(tr.closest("#ticketsTable")){
+        // Ticket actions
+        if(act === "delete"){
+          if(confirm("Hapus tiket ini?")){
+            tickets = tickets.filter(t=>t.id!==id);
+            saveTickets(); renderTicketsTable();
+          }
+        } else if(act === "edit"){
+          openTicketModal(id);
+        }
+        return;
+      }
+
+      // Order actions
+      if(act === "confirm"){
+        const idx = orders.findIndex(o=>o.id===id);
+        if(idx>-1){
+          orders[idx].confirmed = true;
+          saveOrders(); renderAll();
+        }
+      } else if(act === "delete"){
+        if(confirm("Hapus pesanan ini?")){
+          orders = orders.filter(o=>o.id!==id);
+          saveOrders(); renderAll();
+        }
+      }
+    });
+
+    // Search
+    $("#searchInput").addEventListener("input", (e)=>{
+      searchTerm = e.target.value || "";
+      renderOrdersTable();
+    });
+
+    // Nav switching
+    function goto(pageId){
+      $$(".page").forEach(p=>p.classList.remove("active"));
+      $("#"+pageId).classList.add("active");
+      $$(".nav-link").forEach(a=>a.classList.toggle("active", a.dataset.page===pageId));
+      // close sidebar on mobile
+      sidebarToggle(false);
+    }
+    document.addEventListener("click", (e)=>{
+      const link = e.target.closest("[data-page],[data-nav]");
+      if(!link) return;
+      const page = link.dataset.page || link.dataset.nav;
+      if(page) { e.preventDefault(); goto(page); }
+    });
+
+    // Sidebar toggle (mobile)
+    const sidebar = $("#sidebar");
+    const overlay = $("#sidebarOverlay");
+    function sidebarToggle(show){
+      const on = show ?? !sidebar.classList.contains("show");
+      sidebar.classList.toggle("show", on);
+      overlay.classList.toggle("show", on);
+    }
+    $("#menuBtn").addEventListener("click", ()=> sidebarToggle(true));
+    overlay.addEventListener("click", ()=> sidebarToggle(false));
+
+    // Modal for tickets
+    const modal = $("#modal");
+    const fName = $("#fName");
+    const fType = $("#fType");
+    const fDate = $("#fDate");
+    const fStock = $("#fStock");
+    let editingId = null;
+
+    function openTicketModal(id){
+      editingId = id || null;
+      $("#modalTitle").textContent = editingId ? "Edit Tiket" : "Tambah Tiket";
+      const t = tickets.find(x=>x.id===editingId) || {name:"", type:"", date:"", stock:0};
+      fName.value = t.name; fType.value = t.type; fDate.value = t.date; fStock.value = t.stock;
+      modal.classList.add("show");
+      modal.setAttribute("aria-hidden","false");
+      fName.focus();
+    }
+    function closeTicketModal(){
+      modal.classList.remove("show");
+      modal.setAttribute("aria-hidden","true");
+    }
+    $("[data-close]", modal)?.addEventListener("click", closeTicketModal);
+    modal.addEventListener("click", e=>{ if(e.target.dataset.close!==undefined) closeTicketModal(); });
+    document.addEventListener("keydown", e=>{ if(e.key==="Escape" && modal.classList.contains("show")) closeTicketModal(); });
+
+    $("#addTicket").addEventListener("click", ()=> openTicketModal(null));
+    $("#saveTicket").addEventListener("click", ()=>{
+      const data = {
+        name: fName.value.trim(),
+        type: fType.value.trim(),
+        date: fDate.value.trim(),
+        stock: Math.max(0, parseInt(fStock.value||"0",10))
+      };
+      if(!data.name || !data.type || !data.date){
+        alert("Mohon lengkapi data tiket."); return;
+      }
+      if(editingId){
+        const i = tickets.findIndex(t=>t.id===editingId);
+        if(i>-1) tickets[i] = {...tickets[i], ...data};
+      }else{
+        tickets.push({id: "t"+Date.now(), ...data});
+      }
+      saveTickets(); renderTicketsTable(); closeTicketModal();
+    });
+
+    // Initial render
+    renderAll();
+  </script>
+</body>
+</html>

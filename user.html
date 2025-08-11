@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Tiket & Pembayaran</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#ffffff; --text:#1f2330; --muted:#6b7280; --line:#e9eaf0;
+    --primary:#8f67e8; --primary-2:#6d58d7; --success:#10b981; --warning:#f59e0b; --danger:#ef4444;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Arial}
+  a{color:inherit;text-decoration:none}
+  .container{max-width:1100px;margin:0 auto;padding:16px}
+  header{background:linear-gradient(90deg,#8a63d2,#b07cfb);color:#fff}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+  .brand{display:flex;gap:10px;align-items:center;font-weight:800}
+  .brand-badge{width:30px;height:30px;border-radius:8px;background:#fff;color:#8a63d2;display:grid;place-items:center}
+  .search{display:flex;align-items:center;background:#fff;border-radius:999px;padding:8px 12px;gap:8px;min-width:220px}
+  .search input{border:0;outline:0;font-size:14px;width:100%}
+  main{padding:22px 0}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 1px rgba(20,20,40,.02),0 8px 24px rgba(20,20,40,.04);padding:14px}
+  .stat h4{margin:2px 0 0 0;font-size:22px}
+  .muted{color:var(--muted)}
+  .pill{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+  .pill button{padding:8px 14px;border:0;background:#fff;color:var(--text);cursor:pointer;font-weight:700}
+  .pill button.active{background:var(--primary);color:#fff}
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0 8px 0;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+  .btn.primary{background:var(--primary);color:#fff;border-color:transparent}
+  .btn.success{background:var(--success);color:#fff;border-color:transparent}
+  .btn.warn{background:var(--warning);color:#111;border-color:transparent}
+  .btn.ghost{background:#fff}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+  .table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto}
+  .table th,.table td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+  .table th{background:#fafafa;font-size:13px;color:#111}
+  .table tr:last-child td{border-bottom:none}
+  .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:800}
+  .b-paid{background:rgba(16,185,129,.15);color:#047857}
+  .b-pending{background:rgba(245,158,11,.18);color:#92400e}
+  .b-unpaid{background:rgba(99,102,241,.16);color:#3730a3}
+  .b-expired{background:rgba(239,68,68,.14);color:#991b1b}
+  .actions{display:flex;gap:6px;flex-wrap:wrap}
+  /* Mobile card list */
+  @media(max-width:820px){
+    .cards{grid-template-columns:repeat(2,1fr)}
+    .table{display:block}
+    .table thead{display:none}
+    .table tr{display:block;border-bottom:1px solid var(--line)}
+    .table td{display:flex;justify-content:space-between;padding:10px 12px}
+    .table td::before{content:attr(data-label);font-weight:700;color:#111}
+    .actions{justify-content:flex-end}
+  }
+  @media(max-width:520px){.cards{grid-template-columns:1fr}}
+  /* Modal */
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;padding:14px}
+  .modal{max-width:760px;width:100%;background:#fff;border-radius:12px;border:1px solid var(--line);box-shadow:0 12px 40px rgba(0,0,0,.25);overflow:hidden}
+  .modal header{background:#fff;color:inherit;border-bottom:1px solid var(--line);padding:12px 14px}
+  .modal .content{padding:14px}
+  .modal.show + .modal-backdrop, .modal-backdrop.show{display:flex}
+  .row{display:flex;justify-content:space-between;gap:14px;padding:6px 0;border-bottom:1px dashed var(--line)}
+  .row:last-child{border-bottom:0}
+  .qr{width:160px;height:160px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .gridDetail{display:grid;grid-template-columns:1fr auto;gap:16px}
+  @media(max-width:640px){.gridDetail{grid-template-columns:1fr}}
+  .small{font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav container">
+    <div class="brand">
+      <div class="brand-badge">E</div>
+      <div>EPIM 2025 • Dashboard</div>
+    </div>
+    <div class="search" style="min-width:260px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.2-4.2M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="q" placeholder="Cari event / ID pesanan" aria-label="Cari">
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="cards">
+    <div class="card stat">
+      <div class="muted small">Total Pesanan</div>
+      <h4 id="statAll">0</h4>
+    </div>
+    <div class="card stat">
+      <div class="muted small">Belum Bayar</div>
+      <h4 id="statUnpaid">0</h4>
+    </div>
+    <div class="card stat">
+      <div class="muted small">Pending</div>
+      <h4 id="statPending">0</h4>
+    </div>
+    <div class="card stat">
+      <div class="muted small">Berhasil</div>
+      <h4 id="statPaid">0</h4>
+    </div>
+  </section>
+
+  <div class="toolbar">
+    <div class="pill" role="tablist" aria-label="Filter status">
+      <button data-filter="all" class="active">Semua</button>
+      <button data-filter="unpaid">Belum Bayar</button>
+      <button data-filter="pending">Pending</button>
+      <button data-filter="paid">Berhasil</button>
+      <button data-filter="expired">Kedaluwarsa</button>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button id="btnAddDemo" class="btn">Tambah Pesanan Demo</button>
+      <button id="btnRefresh" class="btn">Segarkan</button>
+    </div>
+  </div>
+
+  <div class="table card" role="region" aria-label="Daftar pesanan">
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr>
+          <th>ID Pesanan</th>
+          <th>Event</th>
+          <th>Tanggal</th>
+          <th>Metode</th>
+          <th>Qty</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th style="width:330px">Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <div class="muted small" style="margin-top:8px">Tip: Klik “Cek Status” untuk menyegarkan status pending. Klik “Bayar” untuk melanjutkan pembayaran.</div>
+</main>
+
+<!-- Modal Detail -->
+<div class="modal-backdrop" id="backdrop" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mdTitle">
+    <header class="card" style="margin:0;border:0;border-radius:0">
+      <strong id="mdTitle">Detail Pesanan</strong>
+      <button id="mdClose" class="btn" style="float:right">Tutup</button>
+    </header>
+    <div class="content">
+      <div class="gridDetail">
+        <div>
+          <div class="row"><div>Order ID</div><div id="mdOrderId" style="font-weight:800"></div></div>
+          <div class="row"><div>Event</div><div id="mdEvent"></div></div>
+          <div class="row"><div>Tanggal</div><div id="mdDate"></div></div>
+          <div class="row"><div>Metode</div><div id="mdMethod"></div></div>
+          <div class="row"><div>Rincian</div><div id="mdItems" style="text-align:right"></div></div>
+          <div class="row"><div>Tax</div><div id="mdTax"></div></div>
+          <div class="row"><div>Biaya Platform</div><div id="mdFee"></div></div>
+          <div class="row" style="font-weight:800"><div>Total</div><div id="mdTotal"></div></div>
+          <div class="small muted" id="mdStatusLine" style="margin-top:8px"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+            <button class="btn" id="mdPay">Bayar</button>
+            <button class="btn" id="mdInvoice">Invoice</button>
+            <button class="btn success" id="mdTicket">Unduh Tiket</button>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <canvas id="mdQR" class="qr" width="320" height="320" aria-label="QR Tiket"></canvas>
+          <div class="small muted">QR demo (untuk pratinjau)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Utilities
+  const rupiah = n => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n).replace(',00','');
+  const now = () => Date.now();
+
+  // Fake QR drawer (no libs)
+  function drawFakeQR(canvas, seedStr){
+    if(!canvas) return;
+    const ctx=canvas.getContext('2d'), size=canvas.width;
+    ctx.clearRect(0,0,size,size);
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,size,size);
+    let h=2166136261>>>0; for(let i=0;i<seedStr.length;i++){ h^=seedStr.charCodeAt(i); h=Math.imul(h,16777619); }
+    let s=h>>>0; const rand=()=> (s=(s*1664525+1013904223)>>>0)/0x100000000;
+    const modules=33, cell=Math.floor(size/modules), off=Math.floor((size-cell*modules)/2);
+    function finder(ix,iy){
+      const x=off+ix*cell,y=off+iy*cell;
+      ctx.fillStyle='#000'; ctx.fillRect(x,y,7*cell,7*cell);
+      ctx.fillStyle='#fff'; ctx.fillRect(x+cell,y+cell,5*cell,5*cell);
+      ctx.fillStyle='#000'; ctx.fillRect(x+2*cell,y+2*cell,3*cell,3*cell);
+    }
+    finder(2,2); finder(modules-9,2); finder(2,modules-9);
+    for(let r=0;r<modules;r++){
+      for(let c=0;c<modules;c++){
+        const inFinder=(r>=2&&r<9&&c>=2&&c<9)||(r>=2&&r<9&&c>=modules-9&&c<modules-2)||(r>=modules-9&&r<modules-2&&c>=2&&c<9);
+        const quiet=(r<1||c<1||r>=modules-1||c>=modules-1);
+        if(inFinder||quiet) continue;
+        if(rand()<0.45) ctx.fillRect(off+c*cell, off+r*cell, cell, cell);
+      }
+    }
+    // small center mark
+    const center=size/2; ctx.fillStyle='#8a63d2'; ctx.beginPath(); ctx.arc(center,center,cell*1.2,0,Math.PI*2); ctx.fill();
+  }
+
+  // Ticket PNG generator
+  function generateTicketPNG(order){
+    const w=720,h=360; const c=document.createElement('canvas'); c.width=w; c.height=h; const ctx=c.getContext('2d');
+    const g=ctx.createLinearGradient(0,0,w,0); g.addColorStop(0,'#8a63d2'); g.addColorStop(1,'#b07cfb');
+    ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#fff'; ctx.fillRect(18,18,w-36,h-36);
+    ctx.fillStyle='#1f2330'; ctx.font='700 28px system-ui,Arial'; ctx.fillText('E-Ticket',40,60);
+    ctx.font='16px system-ui,Arial'; ctx.fillStyle='#6b7280'; ctx.fillText(order.event,40,90); ctx.fillText(order.date,40,115);
+    const qrSize=220, qrX=w-40-qrSize, qrY=60;
+    const tmp=document.createElement('canvas'); tmp.width=qrSize; tmp.height=qrSize; drawFakeQR(tmp, order.id+'-'+order.method);
+    ctx.drawImage(tmp,qrX,qrY);
+    ctx.fillStyle='#1f2330'; ctx.font='700 18px system-ui,Arial'; ctx.fillText('Order '+order.id,40,160);
+    ctx.font='16px system-ui,Arial'; let y=190;
+    order.items.forEach(it=>{ ctx.fillText(`- ${it.name} x${it.qty}`,40,y); y+=22; });
+    const total = order.items.reduce((a,b)=>a+b.qty*b.price,0)+order.tax+order.fee;
+    ctx.fillText('Total: '+rupiah(total),40,y+10);
+    ctx.fillStyle='#6b7280'; ctx.font='12px system-ui,Arial';
+    ctx.fillText('Metode: '+order.method+' • Terbit: '+new Date().toLocaleString('id-ID'), 40, h-30);
+    return c.toDataURL('image/png');
+  }
+
+  // Data handling
+  function migrateAndLoad(){
+    // If older 'order' exists, merge into 'orders'
+    const orders = JSON.parse(localStorage.getItem('orders')||'[]');
+    const single = JSON.parse(localStorage.getItem('order')||'null');
+    if(single){
+      const exists = orders.some(o=>o.id===single.id);
+      if(!exists){ orders.push(single); }
+    }
+    localStorage.setItem('orders', JSON.stringify(orders));
+    return orders;
+  }
+
+  function ensureDemoData(){
+    let orders = migrateAndLoad();
+    if(orders.length===0){
+      const baseId = 'INV-' + new Date().toISOString().slice(0,10).replaceAll('-','');
+      orders = [
+        {
+          id: baseId+'-001',
+          event: 'Festival Tari Hardiknas',
+          date: 'Senin, 11 Agustus 2025',
+          items: [{name:'Tiket Festival Tari Hardiknas', qty:1, price:50000}],
+          tax: 16000, fee: 5000, method: 'DANA',
+          status: 'paid', code: Math.random().toString(36).slice(2,10).toUpperCase(),
+          expiresAt: now() + 15*60*1000
+        },
+        {
+          id: baseId+'-002',
+          event: 'Konser Akustik Malam',
+          date: 'Sabtu, 23 Agustus 2025',
+          items: [{name:'Tiket Reguler', qty:2, price:75000}],
+          tax: 10000, fee: 4000, method: 'GoPay',
+          status: 'pending', code: Math.random().toString(36).slice(2,10).toUpperCase(),
+          expiresAt: now() + 10*60*1000
+        }
+      ];
+      localStorage.setItem('orders', JSON.stringify(orders));
+    }
+    return orders;
+  }
+
+  function saveOrders(list){ localStorage.setItem('orders', JSON.stringify(list)); }
+
+  function statusOf(o){
+    if(o.status==='paid') return 'paid';
+    if(o.expiresAt && now()>o.expiresAt) return 'expired';
+    if(o.status==='pending') return 'pending';
+    return 'unpaid';
+  }
+
+  function totalOf(o){ return o.items.reduce((a,b)=>a+b.qty*b.price,0) + (o.tax||0) + (o.fee||0); }
+  function qtyOf(o){ return o.items.reduce((a,b)=>a+b.qty,0); }
+
+  // Rendering
+  let ORDERS = ensureDemoData();
+  const tbody = document.getElementById('tbody');
+  const q = document.getElementById('q');
+  const pills = [...document.querySelectorAll('.pill button')];
+  let CURRENT_FILTER = 'all';
+
+  function setStats(){
+    const all = ORDERS.length;
+    const unpaid = ORDERS.filter(o=>statusOf(o)==='unpaid').length;
+    const pending = ORDERS.filter(o=>statusOf(o)==='pending').length;
+    const paid = ORDERS.filter(o=>statusOf(o)==='paid').length;
+    document.getElementById('statAll').textContent = all;
+    document.getElementById('statUnpaid').textContent = unpaid;
+    document.getElementById('statPending').textContent = pending;
+    document.getElementById('statPaid').textContent = paid;
+  }
+
+  function render(){
+    setStats();
+    const term = (q.value||'').toLowerCase();
+    const list = ORDERS
+      .filter(o => CURRENT_FILTER==='all' ? true : statusOf(o)===CURRENT_FILTER)
+      .filter(o => o.id.toLowerCase().includes(term) || (o.event||'').toLowerCase().includes(term))
+      .sort((a,b)=> (a.id>b.id? -1:1));
+
+    let html='';
+    list.forEach(o=>{
+      const s=statusOf(o);
+      const badge = s==='paid' ? 'b-paid' : s==='pending' ? 'b-pending' : s==='expired' ? 'b-expired' : 'b-unpaid';
+      const sText = s==='paid' ? 'Berhasil' : s==='pending' ? 'Pending' : s==='expired' ? 'Kedaluwarsa' : 'Belum Bayar';
+      const total = rupiah(totalOf(o));
+      const qty = qtyOf(o);
+      html += `
+        <tr>
+          <td data-label="ID">${o.id}</td>
+          <td data-label="Event">${o.event}</td>
+          <td data-label="Tanggal">${o.date}</td>
+          <td data-label="Metode">${o.method}</td>
+          <td data-label="Qty">${qty}</td>
+          <td data-label="Total">${total}</td>
+          <td data-label="Status"><span class="badge ${badge}">${sText}</span></td>
+          <td data-label="Aksi">
+            <div class="actions">
+              <button class="btn" data-act="detail" data-id="${o.id}">Detail</button>
+              <button class="btn ${s==='paid'?'success':'primary'}" data-act="${s==='paid'?'ticket':'pay'}" data-id="${o.id}">${s==='paid'?'Tiket':'Bayar'}</button>
+              <button class="btn" data-act="invoice" data-id="${o.id}">Invoice</button>
+              <button class="btn" data-act="check" data-id="${o.id}">Cek Status</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+    tbody.innerHTML = html || `<tr><td colspan="8" style="padding:16px;text-align:center;color:#777">Tidak ada data untuk filter/pencarian ini.</td></tr>`;
+  }
+
+  pills.forEach(btn=>{
+    btn.onclick=()=>{
+      pills.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      CURRENT_FILTER = btn.dataset.filter;
+      render();
+    };
+  });
+  q.oninput=()=>render();
+  document.getElementById('btnRefresh').onclick=()=>{ ORDERS=migrateAndLoad(); render(); };
+
+  // Demo add order
+  document.getElementById('btnAddDemo').onclick=()=>{
+    const seq = String(ORDERS.length+1).padStart(3,'0');
+    const newOrder = {
+      id: 'INV-' + new Date().toISOString().slice(0,10).replaceAll('-','') + '-' + seq,
+      event: 'Workshop Kreatif '+seq,
+      date: new Date(Date.now()+86400000).toLocaleDateString('id-ID',{weekday:'long', day:'2-digit', month:'long', year:'numeric'}),
+      items: [{name:'Tiket Workshop', qty:1, price:45000}],
+      tax: 8000, fee: 4000, method: Math.random()>0.5?'DANA':'GoPay',
+      status: 'unpaid', code: Math.random().toString(36).slice(2,10).toUpperCase(),
+      expiresAt: now() + 15*60*1000
+    };
+    ORDERS.unshift(newOrder); saveOrders(ORDERS); render();
+  };
+
+  // Row actions
+  tbody.onclick=(e)=>{
+    const btn = e.target.closest('button[data-act]');
+    if(!btn) return;
+    const id = btn.dataset.id;
+    const act = btn.dataset.act;
+    const order = ORDERS.find(o=>o.id===id);
+    if(!order) return;
+    if(act==='pay'){
+      // set single 'order' for pay.html
+      localStorage.setItem('order', JSON.stringify(order));
+      location.href='pay.html';
+    }else if(act==='ticket'){
+      if(statusOf(order)!=='paid'){ alert('Tiket tersedia setelah pembayaran berhasil.'); return; }
+      const dataURL = generateTicketPNG(order);
+      const a=document.createElement('a'); a.download=`E-Ticket-${order.id}.png`; a.href=dataURL; a.click();
+    }else if(act==='invoice'){
+      localStorage.setItem('order', JSON.stringify(order));
+      location.href='invoice.html';
+    }else if(act==='detail'){
+      openDetail(order);
+    }else if(act==='check'){
+      checkStatus(order);
+    }
+  };
+
+  function checkStatus(order){
+    // Demo verifikasi: jika sudah kadaluarsa -> unpaid/expired, jika pending -> jadikan paid setelah 2 detik
+    const s = statusOf(order);
+    if(s==='paid'){ alert('Pembayaran sudah berhasil.'); return; }
+    if(s==='expired'){ alert('Pesanan sudah kedaluwarsa. Silakan buat pesanan baru.'); return; }
+    // Simulasi validasi
+    const btn = document.querySelector(`button[data-act="check"][data-id="${order.id}"]`);
+    const prev = btn.textContent;
+    btn.textContent='Memeriksa...'; btn.disabled=true;
+    setTimeout(()=>{
+      order.status='paid'; // simulasi sukses
+      // sinkronkan ke localStorage 'order' jika id sama
+      const single = JSON.parse(localStorage.getItem('order')||'null');
+      if(single && single.id===order.id){ localStorage.setItem('order', JSON.stringify(order)); }
+      saveOrders(ORDERS);
+      btn.textContent=prev; btn.disabled=false;
+      render();
+      alert('Status diperbarui: Pembayaran berhasil.');
+    }, 1600);
+  }
+
+  // Modal detail
+  const backdrop = document.getElementById('backdrop');
+  const mdClose = document.getElementById('mdClose');
+  mdClose.onclick=()=> backdrop.classList.remove('show');
+  function openDetail(o){
+    document.getElementById('mdOrderId').textContent = o.id;
+    document.getElementById('mdEvent').textContent = o.event;
+    document.getElementById('mdDate').textContent = o.date;
+    document.getElementById('mdMethod').textContent = o.method;
+    document.getElementById('mdItems').innerHTML = o.items.map(it=>`${it.name} × ${it.qty} • ${rupiah(it.price)}`).join('<br>');
+    document.getElementById('mdTax').textContent = rupiah(o.tax||0);
+    document.getElementById('mdFee').textContent = rupiah(o.fee||0);
+    document.getElementById('mdTotal').textContent = rupiah(totalOf(o));
+    const s=statusOf(o);
+    const sText = s==='paid'?'Berhasil':s==='pending'?'Pending':s==='expired'?'Kedaluwarsa':'Belum Bayar';
+    const exp = o.expiresAt ? new Date(o.expiresAt).toLocaleString('id-ID') : '-';
+    document.getElementById('mdStatusLine').textContent = `Status: ${sText} • Kedaluwarsa: ${exp}`;
+    drawFakeQR(document.getElementById('mdQR'), o.id+'-'+o.method);
+
+    // Wire modal buttons
+    const btnPay = document.getElementById('mdPay');
+    const btnInv = document.getElementById('mdInvoice');
+    const btnTix = document.getElementById('mdTicket');
+    btnPay.onclick=()=>{ localStorage.setItem('order', JSON.stringify(o)); location.href='pay.html'; };
+    btnInv.onclick=()=>{ localStorage.setItem('order', JSON.stringify(o)); location.href='invoice.html'; };
+    btnTix.onclick=()=>{
+      if(statusOf(o)!=='paid'){ alert('Tiket tersedia setelah pembayaran berhasil.'); return; }
+      const url = generateTicketPNG(o); const a=document.createElement('a'); a.download=`E-Ticket-${o.id}.png`; a.href=url; a.click();
+    };
+    // Enable/disable based on status
+    btnTix.disabled = statusOf(o)!=='paid';
+    backdrop.classList.add('show');
+  }
+
+  // Initial render
+  render();
+</script>
+</body>
+</html>
