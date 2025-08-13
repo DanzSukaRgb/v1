@@ -66,7 +66,7 @@
   const order = JSON.parse(localStorage.getItem('order')||'null');
   if(!order){ location.href='pay.html'; }
 
-  // Force status to paid in case user arriving from external redirect
+  // Force status to paid
   order.status='paid'; localStorage.setItem('order', JSON.stringify(order));
 
   // Render breakdown
@@ -86,57 +86,14 @@
 
   document.getElementById('openInvoice').onclick=()=>location.href='invoice.html';
 
-  // Generate simple e-ticket PNG (QR + teks) without dependencies
+  // Download langsung gambar template
   document.getElementById('downloadTicket').onclick=()=>{
-    const w=720,h=360;
-    const c=document.createElement('canvas'); c.width=w; c.height=h;
-    const ctx=c.getContext('2d');
-    // bg
-    const g=ctx.createLinearGradient(0,0,w,0); g.addColorStop(0,'#8a63d2'); g.addColorStop(1,'#b07cfb');
-    ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
-    ctx.fillStyle='#fff'; ctx.fillRect(18,18,w-36,h-36);
-    // title
-    ctx.fillStyle='#1f2330'; ctx.font='700 28px system-ui,Arial'; ctx.fillText('E-Ticket', 40, 60);
-    ctx.font='16px system-ui,Arial'; ctx.fillStyle='#6b7280';
-    ctx.fillText(order.event, 40, 90);
-    ctx.fillText(order.date, 40, 115);
-    // QR area
-    const qrSize = 220; const qrX = w-40-qrSize; const qrY = 60;
-    // draw simple QR-like pattern
-    function drawFakeQR(ctx,x,y,size,seedStr){
-      let h=2166136261>>>0; for(let i=0;i<seedStr.length;i++){h^=seedStr.charCodeAt(i); h=Math.imul(h,16777619);} let s=h>>>0;
-      const rand=()=> (s=(s*1664525+1013904223)>>>0)/0x100000000;
-      const modules=33; const cell=Math.floor(size/modules);
-      ctx.fillStyle='#fff'; ctx.fillRect(x,y,size,size);
-      ctx.fillStyle='#000';
-      function finder(ix,iy){
-        ctx.fillRect(x+ix*cell,y+iy*cell,7*cell,7*cell);
-        ctx.fillStyle='#fff'; ctx.fillRect(x+ix*cell+cell,y+iy*cell+cell,5*cell,5*cell);
-        ctx.fillStyle='#000'; ctx.fillRect(x+ix*cell+2*cell,y+iy*cell+2*cell,3*cell,3*cell);
-      }
-      finder(2,2); finder(modules-9,2); finder(2,modules-9);
-      for(let r=0;r<modules;r++){
-        for(let c=0;c<modules;c++){
-          const inFinder=(r>=2&&r<9&&c>=2&&c<9)||(r>=2&&r<9&&c>=modules-9&&c<modules-2)||(r>=modules-9&&r<modules-2&&c>=2&&c<9);
-          const quiet=(r<1||c<1||r>=modules-1||c>=modules-1);
-          if(inFinder||quiet) continue;
-          if(rand()<0.45) ctx.fillRect(x+c*cell,y+r*cell,cell,cell);
-        }
-      }
-    }
-    drawFakeQR(ctx, qrX, qrY, qrSize, order.id+'-'+order.method);
-    // text right
-    ctx.fillStyle='#1f2330'; ctx.font='700 18px system-ui,Arial';
-    ctx.fillText('Order '+order.id, 40, 160);
-    ctx.font='16px system-ui,Arial';
-    let y=190;
-    order.items.forEach(it=>{
-      ctx.fillText(`- ${it.name} x${it.qty}`, 40, y); y+=22;
-    });
-    ctx.fillText('Total: '+(new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(order.items.reduce((a,b)=>a+b.qty*b.price,0)+order.tax+order.fee)).replace(",00",""), 40, y+10);
-    // footer
-    ctx.fillStyle='#6b7280'; ctx.font='12px system-ui,Arial'; ctx.fillText('Metode: '+order.method+' • Terbit: '+new Date().toLocaleString('id-ID'), 40, h-30);
-    const a=document.createElement('a'); a.download=`E-Ticket-${order.id}.png`; a.href=c.toDataURL('image/png'); a.click();
+    const a=document.createElement('a');
+    a.href='/img/tiket.png'; // path gambar tiket
+    a.download=`E-Ticket-${order.id}.png`; // nama file download
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 </script>
 </body>

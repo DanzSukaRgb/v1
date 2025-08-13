@@ -5,489 +5,574 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Daftar Tiket</title>
   <style>
-    :root{
-      --bg:#fafafa;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --primary:#7c3aed;         /* ungu utama */
-      --primary-2:#5b21b6;       /* ungu gelap */
-      --ring:#a78bfa;
-      --surface:#ffffff;
-      --chip:#f3f4f6;
-      --success:#16a34a;
-      --danger:#ef4444;
-      --radius:16px;
+    :root {
+      --bg: #fafafa;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #7c3aed; /* ungu utama */
+      --primary-2: #5b21b6; /* ungu gelap */
+      --ring: #a78bfa;
+      --surface: #ffffff;
+      --chip: #f3f4f6;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --radius: 16px;
       --shadow: 0 10px 30px rgba(16,24,40,.08), 0 2px 6px rgba(16,24,40,.06);
     }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        text-decoration: none;
-        list-style: none;
-        font-family: Poppins, sans-serif;
-        scroll-behavior: smooth;
-      }
-      body {
-        overflow-x: hidden;
-      }
-    /* body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: var(--bg);
-      color: var(--text);
-      line-height:1.5;
-    } */
-
-    .container{
-      width:min(1100px, 92vw);
-      margin-inline:auto;
-      padding:24px 0 64px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+      list-style: none;
+      font-family: Poppins, sans-serif;
+      scroll-behavior: smooth;
     }
 
-    header{
-      text-align:center;
-      margin:32px 0 20px;
+    body {
+      margin: 0; /* Remove default body margin */
+      padding: 0; /* Remove default body padding */
+      overflow-x: hidden; /* Prevent horizontal scroll */
     }
 
-    h1{
+    .container {
+      width: min(1100px, 92vw);
+      margin-inline: auto;
+      padding: 24px 0 64px;
+    }
+
+    header {
+      text-align: center;
+      margin: 32px 0 20px;
+    }
+
+    h1 {
       font-size: clamp(24px, 4.5vw, 36px);
-      letter-spacing:.5px;
-      margin:0 0 8px;
-      font-weight:800;
+      letter-spacing: .5px;
+      margin: 0 0 8px;
+      font-weight: 800;
     }
 
-    .underline{
-      width:120px;height:4px;border-radius:4px;
-      background:#222;opacity:.2;margin:0 auto 18px;
+    .underline {
+      width: 120px;
+      height: 4px;
+      border-radius: 4px;
+      background: #222;
+      opacity: .2;
+      margin: 0 auto 18px;
     }
 
     /* Kategori pills */
-    .tabs{
-      display:flex;gap:12px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin-bottom:26px;
+    .tabs {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
     }
-    .tab{
-      appearance:none;border:0;cursor:pointer;
-      padding:10px 18px;border-radius:999px;
-      background:var(--chip);
-      color:#374151;font-weight:700;
-      transition:.2s ease;
+
+    .tab {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: #374151;
+      font-weight: 700;
+      transition: .2s ease;
       box-shadow: inset 0 0 0 1px #e5e7eb;
     }
-    .tab:hover{transform:translateY(-1px)}
-    .tab.active{
+
+    .tab:hover {
+      transform: translateY(-1px);
+    }
+
+    .tab.active {
       background: rgba(124,58,237,.10);
-      color:var(--primary);
+      color: var(--primary);
       box-shadow: inset 0 0 0 2px var(--ring);
     }
 
-    /* Kartu event besar (seperti mockup) */
-    .event{
+    /* Kartu event besar */
+    .event {
       background: linear-gradient(145deg, rgba(124,58,237,.22), rgba(91,33,182,.22));
-      border:1px solid rgba(124,58,237,.25);
-      border-radius:28px;
-      padding:22px;
+      border: 1px solid rgba(124,58,237,.25);
+      border-radius: 28px;
+      padding: 22px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(2px);
-      margin-bottom:26px;
+      margin-bottom: 26px;
     }
 
-    .event-grid{
-      display:grid;
+    .event-grid {
+      display: grid;
       grid-template-columns: 1.1fr .9fr;
-      gap:22px;
-      align-items:stretch;
+      gap: 22px;
+      align-items: stretch;
     }
-    .left, .right{
-      display:grid;
+
+    .left, .right {
+      display: grid;
     }
 
     /* Kiri: tiket + teks */
-    .ticket-wrap{
-      display:grid;
+    .ticket-wrap {
+      display: grid;
       grid-template-columns: 1fr;
       grid-auto-rows: min-content;
-      gap:18px;
-    }
-    .ticket-img{
-      width:100%;
-      height:auto;
-      border-radius:14px;
-      object-fit:cover;
-      object-position:center;
-      background:linear-gradient(135deg, #ede9fe, #ddd6fe);
-      border:1px solid rgba(124,58,237,.25);
+      gap: 18px;
     }
 
-    .desc{
-      background:rgba(255,255,255,.72);
-      border:1px solid rgba(124,58,237,.18);
-      border-radius:16px;
-      padding:18px;
+    .ticket-img {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      object-fit: cover;
+      object-position: center;
+      background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+      border: 1px solid rgba(124,58,237,.25);
+    }
+
+    .desc {
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(124,58,237,.18);
+      border-radius: 16px;
+      padding: 18px;
       backdrop-filter: blur(6px);
     }
-    .desc h3{
-      margin:0 0 8px;font-size:20px;letter-spacing:.2px
-    }
-    .desc p{margin:0;color:var(--text);opacity:.9}
 
-    .btns{
-      display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;
+    .desc h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: .2px;
     }
-    .btn{
-      appearance:none;border:0;cursor:pointer;
-      padding:10px 14px;border-radius:12px;
-      font-weight:700;
-      transition:.2s ease;
-      display:inline-flex;align-items:center;gap:8px;
+
+    .desc p {
+      margin: 0;
+      color: var(--text);
+      opacity: .9;
     }
-    .btn.primary{
+
+    .btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: .2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn.primary {
       background: linear-gradient(90deg, var(--primary), var(--primary-2));
-      color:#fff;
+      color: #fff;
       box-shadow: 0 8px 20px rgba(124,58,237,.35);
     }
-    .btn.primary:hover{filter:brightness(1.05);transform:translateY(-1px)}
-    .btn.ghost{
-      background:#fff;color:#374151;
-      border:1px solid #e5e7eb;
+
+    .btn.primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
     }
-    .btn.ghost:hover{transform:translateY(-1px)}
+
+    .btn.ghost {
+      background: #fff;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .btn.ghost:hover {
+      transform: translateY(-1px);
+    }
 
     /* Kanan: galeri dua gambar */
-    .gallery{
-      display:grid;gap:16px;
+    .gallery {
+      display: grid;
+      gap: 16px;
       grid-auto-rows: 1fr;
     }
-    .photo{
-      width:100%;
-      border-radius:16px;
+
+    .photo {
+      width: 50%;
+      border-radius: 16px;
       height: calc(50% - 8px);
-      object-fit:cover;
-      border:1px solid rgba(124,58,237,.2);
-      background:#f5f3ff;
+      object-fit: cover;
+      border: 1px solid rgba(124,58,237,.2);
+      background: #f5f3ff;
+    }
+
+    /* Make Tari event photos square */
+    .event[data-category="Tari"] .photo {
+      aspect-ratio: 1 / 1; /* Force square aspect ratio */
+      height: auto; /* Let height adjust to maintain square shape */
+      object-fit: cover; /* Ensure image fills square without distortion */
     }
 
     /* Responsif */
-    @media (max-width: 860px){
-      .event-grid{grid-template-columns:1fr}
-      .ticket-img{height:180px}
-      .photo{height:220px}
+    @media (max-width: 860px) {
+      .event-grid {
+        grid-template-columns: 1fr;
+      }
+      .ticket-img {
+        height: 180px;
+      }
+      .photo {
+        height: 220px;
+      }
+      .event[data-category="Tari"] .photo {
+        height: 220px; /* Maintain square shape in responsive view */
+        aspect-ratio: 1 / 1;
+      }
     }
-    @media (max-width: 440px){
-      .btn{width:100%;justify-content:center}
-      .photo{height:190px}
+
+    @media (max-width: 440px) {
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .photo {
+        height: 190px;
+      }
+      .event[data-category="Tari"] .photo {
+        height: 190px; /* Maintain square shape in smaller screens */
+        aspect-ratio: 1 / 1;
+      }
     }
 
     /* Modal */
-    .modal{
-      position:fixed;inset:0;display:none;
-      place-items:center;
-      padding:20px;z-index:60;
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      z-index: 60;
     }
-    .modal.show{display:grid}
-    .backdrop{
-      position:absolute;inset:0;background:rgba(17,24,39,.55);
+
+    .modal.show {
+      display: grid;
+    }
+
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(17,24,39,.55);
       backdrop-filter: blur(2px);
-      animation:fade .2s ease;
+      animation: fade .2s ease;
     }
-    @keyframes fade{from{opacity:0}to{opacity:1}}
 
-    .dialog{
-      position:relative;z-index:1;
-      width:min(760px, 96vw);
-      max-height:86vh;overflow:auto;
-      background:#fff;border-radius:16px;
+    @keyframes fade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .dialog {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 96vw);
+      max-height: 86vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 16px;
       box-shadow: 0 30px 70px rgba(0,0,0,.25);
-      border:1px solid #e5e7eb;
-      animation:pop .18s ease;
-    }
-    @keyframes pop{from{transform:translateY(8px);opacity:.8}to{transform:none;opacity:1}}
-
-    .dialog-header{
-      padding:14px 18px;border-bottom:1px solid #f1f5f9;
-      position:sticky;top:0;background:#fff;z-index:2;
-    }
-    .dialog-title{
-      font-weight:800;margin:0;font-size:18px;color:#111827;
-    }
-    .close{
-      position:absolute;right:12px;top:10px;
-      width:36px;height:36px;border-radius:10px;
-      border:1px solid #e5e7eb;background:#fff;cursor:pointer;
-      display:grid;place-items:center;font-size:18px
-    }
-    .close:hover{background:#f9fafb}
-
-    .dialog-body{padding:16px 18px 18px}
-    .banner{
-      width:100%;height:180px;border-radius:12px;
-      object-fit:cover;border:1px solid #e5e7eb;background:#f3f4f6
-    }
-    .meta{
-      display:flex;gap:14px;align-items:center;justify-content:space-between;
-      margin-top:8px;color:#4b5563;font-weight:600;
-      flex-wrap:wrap;
-    }
-    .meta .chip{
-      background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;
-      padding:6px 10px;font-size:12px
+      border: 1px solid #e5e7eb;
+      animation: pop .18s ease;
     }
 
-    .section-title{
-      font-weight:800;margin:16px 0 8px;font-size:16px
+    @keyframes pop {
+      from { transform: translateY(8px); opacity: .8; }
+      to { transform: none; opacity: 1; }
     }
-    .body-text{color:#374151;margin:0}
 
-    .timeline{
-      display:grid;gap:10px;margin-top:10px
+    .dialog-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid #f1f5f9;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 2;
     }
-    .item{
-      display:flex;align-items:center;gap:12px;
-      background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px
-    }
-    .dot{
-      width:28px;height:28px;border-radius:999px;
-      display:grid;place-items:center;
-      background:#f3f4f6;border:1px solid #e5e7eb;
-      font-weight:800;color:#111827;font-size:12px
-    }
-    .when{width:90px;font-weight:700;color:#111827}
-    .what{color:#374151}
 
-    .dialog-footer{
-      display:flex;justify-content:flex-end;gap:10px;
-      padding:12px 18px;border-top:1px solid #f1f5f9;position:sticky;bottom:0;background:#fff
+    .dialog-title {
+      font-weight: 800;
+      margin: 0;
+      font-size: 18px;
+      color: #111827;
     }
-    .btn.small{padding:8px 12px;border-radius:10px;font-size:14px}
+
+    .close {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    .close:hover {
+      background: #f9fafb;
+    }
+
+    .dialog-body {
+      padding: 16px 18px 18px;
+    }
+
+    .banner {
+      width: 100%;
+      height: 180px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid #e5e7eb;
+      background: #f3f4f6;
+    }
+
+    .meta {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      color: #4b5563;
+      font-weight: 600;
+      flex-wrap: wrap;
+    }
+
+    .meta .chip {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .section-title {
+      font-weight: 800;
+      margin: 16px 0 8px;
+      font-size: 16px;
+    }
+
+    .body-text {
+      color: #374151;
+      margin: 0;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      font-weight: 800;
+      color: #111827;
+      font-size: 12px;
+    }
+
+    .when {
+      width: 90px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .what {
+      color: #374151;
+    }
+
+    .dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 12px 18px;
+      border-top: 1px solid #f1f5f9;
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+    }
+
+    .btn.small {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    /* Navbar styles */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em 7%;
+      background-color: #6d676473;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 1000;
+    }
+
+    ul {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    nav ul li a {
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #007bff;
+    }
+
+    nav ul li input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    nav ul li input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      ul {
+        flex-direction: column;
+        gap: 15px;
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        height: 100vh;
+        background-color: #6d676473;
+        padding: 20px;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        transition: left 0.3s ease;
+        z-index: 1000;
+      }
+
+      ul.show {
+        left: 0;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    /* Header styles */
+    .kepala {
+      height: 100vh; /* Full viewport height */
+      background: #6a1b9a url("/img/faq.png") center center / cover no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      margin: 0; /* Ensure no margin */
+      padding-top: 60px; /* Adjust for navbar height */
+      box-sizing: border-box; /* Ensure padding doesn't affect height */
+    }
+
+    .header-content {
+      max-width: 800px;
+      padding: 20px;
+    }
+
+    .kepala h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .kepala p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #002b5b;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #004080;
+    }
   </style>
 </head>
 <body>
+  <nav>
+    <div class="logo">
+      <img src="/img/logo.png" alt="" width="40" />
+    </div>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <ul id="menu">
+      <li><a href="">Beranda</a></li>
+      <li><a href="#">Tentang</a></li>
+      <li><a href="#">Event</a></li>
+      <li><a href="#">Informasi</a></li>
+      <li><input type="text" placeholder="Cari..." /></li>
+    </ul>
+  </nav>
 
-    <nav>
-      <style>
-        nav {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0.5em 7%;
-          background-color: #6d676473;
-          position: fixed;
-          left: 0;
-          right: 0;
-          top: 0;
-          z-index: 1000;
-        }
+  <header class="kepala">
+    <div class="header-content">
+      <h1>Lestarikan Budaya<br>Indonesia dengan Festival Enem</h1>
+      <p>Budaya Asing keren? eitss... Budaya Indonesia jauh lebih keren ga percaya?, yuk ikutan!!</p>
+      <button>Jelajahi Tiket</button>
+    </div>
+  </header>
 
-        ul {
-          display: flex;
-          gap: 20px;
-          align-items: center;
-        }
-
-        nav ul li a {
-          color: rgb(255, 255, 255);
-          font-weight: bold;
-          font-weight: 500;
-          transition: color 0.3s ease;
-        }
-
-        nav ul li a:hover {
-          color: #007bff;
-        }
-
-        nav ul li input {
-          padding: 10px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-
-        nav ul li input:focus {
-          outline: none;
-          border-color: #007bff;
-        }
-
-        .menu-toggle {
-          display: none;
-          font-size: 24px;
-          cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-          ul {
-            flex-direction: column;
-            gap: 15px;
-            position: fixed;
-            top: 0;
-            left: -250px;
-            width: 250px;
-            height: 100vh;
-            background-color: #6d676473;
-            padding: 20px;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            transition: left 0.3s ease;
-            z-index: 1000;
-          }
-
-          ul.show {
-            left: 0;
-          }
-
-          .menu-toggle {
-            display: block;
-          }
-        }
-      </style>
-      <div class="logo">
-        <img src="/img/logo.png" alt="" width="40" />
-      </div>
-      <div class="menu-toggle" id="menu-toggle">☰</div>
-      <ul id="menu">
-        <li><a href="">Beranda</a></li>
-        <li><a href="#">Tentang</a></li>
-        <li><a href="#">Event</a></li>
-        <li><a href="#">Informasi</a></li>
-        <li><input type="text" placeholder="Cari..." /></li>
-      </ul>
-    </nav>
-
-    
-    <header class="kepala">
-      <style>
-        .kepala {
-          padding: 20px;
-          text-align: center;
-          background: url(/img/faq.png) center center / cover no-repeat;
-          height: 100dvh;
-          height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          color: white;
-          position: relative;
-        }
-
-        .header-content {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          max-width: 600px;
-          align-items: center;
-          text-align: center;
-        }
-
-        .kepala h1 {
-          font-size: 2rem;
-          margin: 0;
-        }
-
-        .kepala p {
-          font-size: 1.2rem;
-          margin: 0;
-        }
-
-        .timer {
-          position: absolute;
-          bottom: -25px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: linear-gradient(to bottom, #667eeab6, #764ba2a9);
-          color: white;
-          font-weight: bold;
-          padding: 10px 20px;
-          border-radius: 12px;
-          font-size: 1.5rem;
-          display: flex;
-          gap: 10px;
-          z-index: 10;
-          align-items: center;
-        }
-
-        .dekorasi-kiri {
-          position: absolute;
-          left: 0;
-          bottom: -107px;
-          z-index: 5;
-        }
-
-        .dekorasi-kiri img {
-          max-width: 150px;
-        }
-
-        .dekorasi-kanan {
-          position: absolute;
-          right: 0;
-          bottom: -271px;
-          z-index: 10;
-        }
-
-        .dekorasi-kanan img {
-          display: block;
-          max-width: 150px;
-          height: auto;
-        }
-
-        button {
-          background-color: #002b5b;
-          color: white;
-          border: none;
-          border-radius: 15px;
-          padding: 10px 20px;
-          font-size: 1rem;
-          font-weight: bold;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-          width: auto;
-        }
-
-        button:hover {
-          background-color: #004080;
-        }
-
-        /* Desktop */
-        @media (min-width: 1024px) {
-          .timer {
-            bottom: -40px;
-            padding: 15px 40px;
-            font-size: 2rem;
-            border-radius: 16px;
-            gap: 15px;
-          }
-        }
-
-        /* Mobile */
-        @media (max-width: 600px) {
-          header h1 {
-            font-size: 1.5rem;
-          }
-          header p {
-            font-size: 1rem;
-          }
-        }
-      </style>
-
-      <div class="dekorasi-kanan">
-        <img src="/img/dekorasi kanan bawh.png" alt="" />
-      </div>
-
-      <div class="dekorasi-kiri">
-        <img src="/img/dekorasi kiri bawh.png" alt="" />
-      </div>
-
-      <div class="header-content">
-        <h1>Lestarikan Budaya <br />Indonesia dengan Festival Enem</h1>
-        <p>
-          Budaya Asing keren? eitss... Budaya <br />Indonesia jauh lebih keren
-          ga <br />percaya?, yuk ikutan!!
-        </p>
-        <button>Jelajahi Tiket</button>
-      </div>
-
-      <!-- <div class="timer" id="timer"></div> -->
-    </header>
   <div class="container">
     <header>
       <h1>DAFTAR TIKET</h1>
@@ -505,7 +590,6 @@
       <div class="event-grid">
         <div class="left">
           <div class="ticket-wrap">
-            <!-- Ganti src ke gambar tiket kamu -->
             <img class="ticket-img" src="/img/tiket.png" alt="Tiket Festival Tari Hardiknas" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;420&quot;><defs><linearGradient id=&quot;g&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;1&quot; y2=&quot;1&quot;><stop stop-color=&quot;%23ede9fe&quot; offset=&quot;0&quot;/><stop stop-color=&quot;%23c4b5fd&quot; offset=&quot;1&quot;/></linearGradient></defs><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;url(%23g)&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;28&quot; fill=&quot;%235b21b6&quot; font-weight=&quot;700&quot;>Tiket Festival Tari</text></svg>';">
             <div class="desc">
               <h3>Festival Tari Hardiknas</h3>
@@ -519,7 +603,6 @@
         </div>
         <div class="right">
           <div class="gallery">
-            <!-- Ganti src ke foto kamu -->
             <img class="photo" src="assets/tari-foto-1.jpg" alt="Foto kegiatan tari 1"
                  onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;500&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23f5f3ff&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;22&quot; fill=&quot;%237c3aed&quot; font-weight=&quot;700&quot;>Foto Tari 1</text></svg>';">
             <img class="photo" src="assets/tari-foto-2.jpg" alt="Foto kegiatan tari 2"
@@ -529,14 +612,13 @@
       </div>
     </article>
 
-
     <!-- Event 2: Musik -->
     <article class="event" data-category="Musik" data-id="konser-malam">
       <div class="event-grid">
         <div class="left">
           <div class="ticket-wrap">
             <img class="ticket-img" src="/img/tiket.png" alt="Tiket Konser Malam Kampus"
-                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;420&quot;><defs><linearGradient id=&quot;g&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;1&quot; y2=&quot;1&quot;><stop stop-color=&quot;%23dbeafe&quot; offset=&quot;0&quot;/><stop stop-color=&quot;%2393c5fd&quot; offset=&quot;1&quot;/></linearGradient></defs><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;url(%23g)&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;28&quot; fill=&quot;%231e3a8a&quot; font-weight=&quot;700&quot;>Tiket Konser Musik</text></svg>';">
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;1.0&quot; width=&quot;800&quot; height=&quot;420&quot;><defs><linearGradient id=&quot;g&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;1&quot; y2=&quot;1&quot;><stop stop-color=&quot;%23dbeafe&quot; offset=&quot;0&quot;/><stop stop-color=&quot;%2393c5fd&quot; offset=&quot;1&quot;/></linearGradient></defs><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;url(%23g)&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;28&quot; fill=&quot;%231e3a8a&quot; font-weight=&quot;700&quot;>Tiket Konser Musik</text></svg>';">
             <div class="desc">
               <h3>Konser Malam Kampus</h3>
               <p>Pentas musik kolaboratif mahasiswa dengan berbagai genre dan bintang tamu lokal.</p>
@@ -601,10 +683,8 @@
           <span class="chip" id="modal-date">Tanggal</span>
           <span class="chip" id="modal-place">Lokasi</span>
         </div>
-
         <h3 class="section-title">Deskripsi Event</h3>
         <p class="body-text" id="modal-desc"></p>
-
         <h3 class="section-title">Susunan Acara</h3>
         <div class="timeline" id="modal-timeline"></div>
       </div>
@@ -616,7 +696,7 @@
   </div>
 
   <script>
-    // Data event (silakan sesuaikan)
+    // Data event
     const EVENTS = {
       "hardiknas-tari": {
         title: "Festival Tari Hardiknas",
@@ -626,10 +706,10 @@
         desc:
           "Festival Hardiknas 2025 merupakan rangkaian acara kreatif dan edukatif untuk memperingati Hari Pendidikan Nasional. Mengusung tema \"Merdeka Belajar, Merdeka Berkarya\", festival ini menjadi wadah ekspresi, apresiasi, dan inspirasi bagi warga sekolah serta masyarakat.",
         schedule: [
-          ["08.00–08.10","Sambutan"],
-          ["08.10–09.10","Pertunjukan Tari Tradisional"],
-          ["09.10–10.00","Pertunjukan Seni Teater"],
-          ["10.00–12.00","Istirahat dan penutup"]
+          ["08.00–08.10", "Sambutan"],
+          ["08.10–09.10", "Pertunjukan Tari Tradisional"],
+          ["09.10–10.00", "Pertunjukan Seni Teater"],
+          ["10.00–12.00", "Istirahat dan penutup"]
         ]
       },
       "konser-malam": {
@@ -640,10 +720,10 @@
         desc:
           "Konser kolaboratif lintas UKM musik dengan penampilan band kampus dan bintang tamu lokal. Nikmati suasana malam penuh energi dan kebersamaan.",
         schedule: [
-          ["18.30–18.45","Pembukaan"],
-          ["18.45–20.00","Penampilan Band Kampus"],
-          ["20.00–20.15","Istirahat"],
-          ["20.15–21.30","Bintang Tamu & Kolaborasi"]
+          ["18.30–18.45", "Pembukaan"],
+          ["18.45–20.00", "Penampilan Band Kampus"],
+          ["20.00–20.15", "Istirahat"],
+          ["20.15–21.30", "Bintang Tamu & Kolaborasi"]
         ]
       },
       "teater-aksara": {
@@ -654,10 +734,10 @@
         desc:
           "Pementasan teater bertema budaya dan literasi yang menggabungkan elemen musik, tari, dan drama untuk menghadirkan cerita yang berkesan.",
         schedule: [
-          ["16.00–16.15","Pembukaan"],
-          ["16.15–17.00","Babak I"],
-          ["17.00–17.15","Rehat"],
-          ["17.15–18.00","Babak II & Penutup"]
+          ["16.00–16.15", "Pembukaan"],
+          ["16.15–17.00", "Babak I"],
+          ["17.00–17.15", "Rehat"],
+          ["17.15–18.00", "Babak II & Penutup"]
         ]
       }
     };
@@ -685,16 +765,15 @@
     const timelineEl = document.getElementById("modal-timeline");
     const buyBtn = document.getElementById("modal-buy");
 
-    function openModal(id){
+    function openModal(id) {
       const d = EVENTS[id];
-      if(!d) return;
+      if (!d) return;
       titleEl.textContent = d.title;
-      dateEl.textContent  = d.date;
+      dateEl.textContent = d.date;
       placeEl.textContent = d.place;
-      descEl.textContent  = d.desc;
+      descEl.textContent = d.desc;
       bannerEl.src = d.banner || "";
       bannerEl.alt = `Banner ${d.title}`;
-      // placeholder jika banner tidak ditemukan
       bannerEl.onerror = () => {
         bannerEl.onerror = null;
         bannerEl.src = '/img/tiket.png';
@@ -713,67 +792,63 @@
       });
 
       buyBtn.onclick = () => {
-        // alert("Arahkan ke halaman pembayaran atau tautan tiket untuk: " + d.title);
-        window.location.href='detail-tiket.html';
+        window.location.href = 'detail-tiket.html';
       };
 
       modal.classList.add("show");
-      modal.setAttribute("aria-hidden","false");
+      modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
-      // fokus ke tombol close
       modal.querySelector(".close").focus();
       trapFocus(modal);
     }
 
-    function closeModal(){
+    function closeModal() {
       modal.classList.remove("show");
-      modal.setAttribute("aria-hidden","true");
+      modal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
       releaseTrap();
     }
 
-    // tombol Detail & Beli
-    document.addEventListener("click", (e)=>{
+    document.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-action]");
-      if(!btn) return;
+      if (!btn) return;
       const id = btn.dataset.id;
-      if(btn.dataset.action === "detail") openModal(id);
-      if(btn.dataset.action === "buy") {
-        // contoh aksi beli
-        // alert("Beli tiket: " + (EVENTS[id]?.title || "Event"));
-        window.location.href='detail-tiket.html';
+      if (btn.dataset.action === "detail") openModal(id);
+      if (btn.dataset.action === "buy") {
+        window.location.href = 'detail-tiket.html';
       }
     });
 
-    // modal close handlers
-    modal.addEventListener("click", (e)=>{
-      if(e.target.matches("[data-close]")) closeModal();
-    });
-    document.addEventListener("keydown", (e)=>{
-      if(e.key === "Escape" && modal.classList.contains("show")) closeModal();
+    modal.addEventListener("click", (e) => {
+      if (e.target.matches("[data-close]")) closeModal();
     });
 
-    // Fokus trap sederhana untuk aksesibilitas
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("show")) closeModal();
+    });
+
     let trapRemover = null;
-    function trapFocus(container){
+    function trapFocus(container) {
       const focusable = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
-      function handler(e){
-        if(e.key !== "Tab") return;
-        if(e.shiftKey && document.activeElement === first){
-          e.preventDefault(); last.focus();
-        } else if(!e.shiftKey && document.activeElement === last){
-          e.preventDefault(); first.focus();
+      function handler(e) {
+        if (e.key !== "Tab") return;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
         }
       }
       container.addEventListener("keydown", handler);
       trapRemover = () => container.removeEventListener("keydown", handler);
     }
-    function releaseTrap(){ if(trapRemover) trapRemover(); }
 
-    // Default: tampilkan semua event
-    // (sudah di-set melalui tab "Semua")
+    function releaseTrap() {
+      if (trapRemover) trapRemover();
+    }
   </script>
 </body>
 </html>
