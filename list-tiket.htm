@@ -31,9 +31,9 @@
     }
 
     body {
-      margin: 0; /* Remove default body margin */
-      padding: 0; /* Remove default body padding */
-      overflow-x: hidden; /* Prevent horizontal scroll */
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
     }
 
     .container {
@@ -63,7 +63,6 @@
       margin: 0 auto 18px;
     }
 
-    /* Kategori pills */
     .tabs {
       display: flex;
       gap: 12px;
@@ -95,7 +94,6 @@
       box-shadow: inset 0 0 0 2px var(--ring);
     }
 
-    /* Kartu event besar */
     .event {
       background: linear-gradient(145deg, rgba(124,58,237,.22), rgba(91,33,182,.22));
       border: 1px solid rgba(124,58,237,.25);
@@ -117,7 +115,6 @@
       display: grid;
     }
 
-    /* Kiri: tiket + teks */
     .ticket-wrap {
       display: grid;
       grid-template-columns: 1fr;
@@ -196,7 +193,6 @@
       transform: translateY(-1px);
     }
 
-    /* Kanan: galeri dua gambar */
     .gallery {
       display: grid;
       gap: 16px;
@@ -204,7 +200,7 @@
     }
 
     .photo {
-      width: 50%;
+      width: 100%;
       border-radius: 16px;
       height: calc(50% - 8px);
       object-fit: cover;
@@ -212,14 +208,32 @@
       background: #f5f3ff;
     }
 
-    /* Make Tari event photos square */
     .event[data-category="Tari"] .photo {
-      aspect-ratio: 1 / 1; /* Force square aspect ratio */
-      height: auto; /* Let height adjust to maintain square shape */
-      object-fit: cover; /* Ensure image fills square without distortion */
+      width: 50%;
+      aspect-ratio: 1 / 1;
+      height: auto;
+      object-fit: cover;
     }
 
-    /* Responsif */
+    .event[data-category="Tari"] .left {
+      width: 100%;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .event[data-category="Tari"] .ticket-wrap {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .event[data-category="Tari"] .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: flex-start;
+    }
+
     @media (max-width: 860px) {
       .event-grid {
         grid-template-columns: 1fr;
@@ -231,8 +245,16 @@
         height: 220px;
       }
       .event[data-category="Tari"] .photo {
-        height: 220px; /* Maintain square shape in responsive view */
+        width: 100%;
+        height: 220px;
         aspect-ratio: 1 / 1;
+      }
+      .event[data-category="Tari"] .ticket-wrap {
+        width: 100%;
+        max-width: none;
+      }
+      .event[data-category="Tari"] .gallery {
+        flex-direction: column;
       }
     }
 
@@ -245,12 +267,12 @@
         height: 190px;
       }
       .event[data-category="Tari"] .photo {
-        height: 190px; /* Maintain square shape in smaller screens */
+        width: 100%;
+        height: 190px;
         aspect-ratio: 1 / 1;
       }
     }
 
-    /* Modal */
     .modal {
       position: fixed;
       inset: 0;
@@ -429,7 +451,6 @@
       font-size: 14px;
     }
 
-    /* Navbar styles */
     nav {
       display: flex;
       align-items: center;
@@ -502,9 +523,8 @@
       }
     }
 
-    /* Header styles */
     .kepala {
-      height: 100vh; /* Full viewport height */
+      height: 100vh;
       background: #6a1b9a url("/img/faq.png") center center / cover no-repeat;
       display: flex;
       justify-content: center;
@@ -512,9 +532,9 @@
       text-align: center;
       color: white;
       position: relative;
-      margin: 0; /* Ensure no margin */
-      padding-top: 60px; /* Adjust for navbar height */
-      box-sizing: border-box; /* Ensure padding doesn't affect height */
+      margin: 0;
+      padding-top: 60px;
+      box-sizing: border-box;
     }
 
     .header-content {
@@ -585,7 +605,6 @@
       </div>
     </header>
 
-    <!-- Event 1: Tari -->
     <article class="event" data-category="Tari" data-id="hardiknas-tari">
       <div class="event-grid">
         <div class="left">
@@ -612,7 +631,6 @@
       </div>
     </article>
 
-    <!-- Event 2: Musik -->
     <article class="event" data-category="Musik" data-id="konser-malam">
       <div class="event-grid">
         <div class="left">
@@ -640,7 +658,6 @@
       </div>
     </article>
 
-    <!-- Event 3: Teater -->
     <article class="event" data-category="Teater" data-id="teater-aksara">
       <div class="event-grid">
         <div class="left">
@@ -669,7 +686,709 @@
     </article>
   </div>
 
-  <!-- Modal -->
+  <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="backdrop" data-close></div>
+    <div class="dialog" role="document">
+      <div class="dialog-header">
+        <h2 class="dialog-title" id="modal-title">Judul Event</h2>
+        <button class="close" title="Tutup" aria-label="Tutup" data-close>&times;</button>
+      </div>
+      <div class="dialog-body">
+        <img class="banner" id="modal-banner" alt="Banner event">
+        <div class="meta">
+          <span class="chip" id="modal-date">Tanggal</span>
+          <span class="chipMoments
+I apologize for the incomplete response. Below is the complete, corrected HTML code with the CSS adjustments to ensure the `.left` section in the "Tari" event takes full width and aligns properly with the gallery, while maintaining the `width: 50%` for the `.photo` elements in the "Tari" event. The changes are focused on the CSS for `.event[data-category="Tari"] .left`, `.event[data-category="Tari"] .ticket-wrap`, and `.event[data-category="Tari"] .gallery` to achieve the desired layout.
+
+<xaiArtifact artifact_id="f6c19852-1f41-4860-9abe-f84bab59bbf4" artifact_version_id="1b9a0688-5107-4cd1-9597-2d634e9189d7" title="index.html" contentType="text/html">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daftar Tiket</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #7c3aed; /* ungu utama */
+      --primary-2: #5b21b6; /* ungu gelap */
+      --ring: #a78bfa;
+      --surface: #ffffff;
+      --chip: #f3f4f6;
+      --success: #16a34a;
+      --danger: #ef4444;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(16,24,40,.08), 0 2px 6px rgba(16,24,40,.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      text-decoration: none;
+      list-style: none;
+      font-family: Poppins, sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: min(1100px, 92vw);
+      margin-inline: auto;
+      padding: 24px 0 64px;
+    }
+
+    header {
+      text-align: center;
+      margin: 32px 0 20px;
+    }
+
+    h1 {
+      font-size: clamp(24px, 4.5vw, 36px);
+      letter-spacing: .5px;
+      margin: 0 0 8px;
+      font-weight: 800;
+    }
+
+    .underline {
+      width: 120px;
+      height: 4px;
+      border-radius: 4px;
+      background: #222;
+      opacity: .2;
+      margin: 0 auto 18px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .tab {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: #374151;
+      font-weight: 700;
+      transition: .2s ease;
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
+
+    .tab:hover {
+      transform: translateY(-1px);
+    }
+
+    .tab.active {
+      background: rgba(124,58,237,.10);
+      color: var(--primary);
+      box-shadow: inset 0 0 0 2px var(--ring);
+    }
+
+    .event {
+      background: linear-gradient(145deg, rgba(124,58,237,.22), rgba(91,33,182,.22));
+      border: 1px solid rgba(124,58,237,.25);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(2px);
+      margin-bottom: 26px;
+    }
+
+    .event-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .left, .right {
+      display: grid;
+    }
+
+    .ticket-wrap {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-auto-rows: min-content;
+      gap: 18px;
+    }
+
+    .ticket-img {
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      object-fit: cover;
+      object-position: center;
+      background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+      border: 1px solid rgba(124,58,237,.25);
+    }
+
+    .desc {
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(124,58,237,.18);
+      border-radius: 16px;
+      padding: 18px;
+      backdrop-filter: blur(6px);
+    }
+
+    .desc h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: .2px;
+    }
+
+    .desc p {
+      margin: 0;
+      color: var(--text);
+      opacity: .9;
+    }
+
+    .btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      transition: .2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn.primary {
+      background: linear-gradient(90deg, var(--primary), var(--primary-2));
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(124,58,237,.35);
+    }
+
+    .btn.primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn.ghost {
+      background: #fff;
+      color: #374151;
+      border: 1px solid #e5e7eb;
+    }
+
+    .btn.ghost:hover {
+      transform: translateY(-1px);
+    }
+
+    .gallery {
+      display: grid;
+      gap: 16px;
+      grid-auto-rows: 1fr;
+    }
+
+    .photo {
+      width: 100%;
+      border-radius: 16px;
+      height: calc(50% - 8px);
+      object-fit: cover;
+      border: 1px solid rgba(124,58,237,.2);
+      background: #f5f3ff;
+    }
+
+    .event[data-category="Tari"] .photo {
+      width: 50%;
+      aspect-ratio: 1 / 1;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .event[data-category="Tari"] .left {
+      width: 100%;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .event[data-category="Tari"] .ticket-wrap {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .event[data-category="Tari"] .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: flex-start;
+    }
+
+    @media (max-width: 860px) {
+      .event-grid {
+        grid-template-columns: 1fr;
+      }
+      .ticket-img {
+        height: 180px;
+      }
+      .photo {
+        height: 220px;
+      }
+      .event[data-category="Tari"] .photo {
+        width: 100%;
+        height: 220px;
+        aspect-ratio: 1 / 1;
+      }
+      .event[data-category="Tari"] .ticket-wrap {
+        width: 100%;
+        max-width: none;
+      }
+      .event[data-category="Tari"] .gallery {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 440px) {
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .photo {
+        height: 190px;
+      }
+      .event[data-category="Tari"] .photo {
+        width: 100%;
+        height: 190px;
+        aspect-ratio: 1 / 1;
+      }
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      z-index: 60;
+    }
+
+    .modal.show {
+      display: grid;
+    }
+
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(17,24,39,.55);
+      backdrop-filter: blur(2px);
+      animation: fade .2s ease;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .dialog {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 96vw);
+      max-height: 86vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 30px 70px rgba(0,0,0,.25);
+      border: 1px solid #e5e7eb;
+      animation: pop .18s ease;
+    }
+
+    @keyframes pop {
+      from { transform: translateY(8px); opacity: .8; }
+      to { transform: none; opacity: 1; }
+    }
+
+    .dialog-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid #f1f5f9;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 2;
+    }
+
+    .dialog-title {
+      font-weight: 800;
+      margin: 0;
+      font-size: 18px;
+      color: #111827;
+    }
+
+    .close {
+      position averse;
+      right: 12px;
+      top: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    .close:hover {
+      background: #f9fafb;
+    }
+
+    .dialog-body {
+      padding: 16px 18px 18px;
+    }
+
+    .banner {
+      width: 100%;
+      height: 180px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid #e5e7eb;
+      background: #f3f4f6;
+    }
+
+    .meta {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 8px;
+      color: #4b5563;
+      font-weight: 600;
+      flex-wrap: wrap;
+    }
+
+    .meta .chip {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+    .section-title {
+      font-weight: 800;
+      margin: 16px 0 8px;
+      font-size: 16px;
+    }
+
+    .body-text {
+      color: #374151;
+      margin: 0;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      font-weight: 800;
+      color: #111827;
+      font-size: 12px;
+    }
+
+    .when {
+      width: 90px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .what {
+      color: #374151;
+    }
+
+    .dialog-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      padding: 12px 18px;
+      border-top: 1px solid #f1f5f9;
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+    }
+
+    .btn.small {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em 7%;
+      background-color: #6d676473;
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 1000;
+    }
+
+    ul {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    nav ul li a {
+      color: rgb(255, 255, 255);
+      font-weight: bold;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #007bff;
+    }
+
+    nav ul li input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    nav ul li input:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      ul {
+        flex-direction: column;
+        gap: 15px;
+        position: fixed;
+        top: 0;
+        left: -250px;
+        width: 250px;
+        height: 100vh;
+        background-color: #6d676473;
+        padding: 20px;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+        transition: left 0.3s ease;
+        z-index: 1000;
+      }
+
+      ul.show {
+        left: 0;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+    }
+
+    .kepala {
+      height: 100vh;
+      background: #6a1b9a url("/img/faq.png") center center / cover no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      margin: 0;
+      padding-top: 60px;
+      box-sizing: border-box;
+    }
+
+    .header-content {
+      max-width: 800px;
+      padding: 20px;
+    }
+
+    .kepala h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .kepala p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #002b5b;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #004080;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <img src="/img/logo.png" alt="" width="40" />
+    </div>
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+    <ul id="menu">
+      <li><a href="">Beranda</a></li>
+      <li><a href="#">Tentang</a></li>
+      <li><a href="#">Event</a></li>
+      <li><a href="#">Informasi</a></li>
+      <li><input type="text" placeholder="Cari..." /></li>
+    </ul>
+  </nav>
+
+  <header class="kepala">
+    <div class="header-content">
+      <h1>Lestarikan Budaya<br>Indonesia dengan Festival Enem</h1>
+      <p>Budaya Asing keren? eitss... Budaya Indonesia jauh lebih keren ga percaya?, yuk ikutan!!</p>
+      <button>Jelajahi Tiket</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <header>
+      <h1>DAFTAR TIKET</h1>
+      <div class="underline"></div>
+      <div class="tabs" role="tablist" aria-label="Kategori">
+        <button class="tab active" data-filter="all" role="tab" aria-selected="true">Semua</button>
+        <button class="tab" data-filter="Tari" role="tab">Tari</button>
+        <button class="tab" data-filter="Musik" role="tab">Musik</button>
+        <button class="tab" data-filter="Teater" role="tab">Teater</button>
+      </div>
+    </header>
+
+    <article class="event" data-category="Tari" data-id="hardiknas-tari">
+      <div class="event-grid">
+        <div class="left">
+          <div class="ticket-wrap">
+            <img class="ticket-img" src="/img/tiket.png" alt="Tiket Festival Tari Hardiknas" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;420&quot;><defs><linearGradient id=&quot;g&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;1&quot; y2=&quot;1&quot;><stop stop-color=&quot;%23ede9fe&quot; offset=&quot;0&quot;/><stop stop-color=&quot;%23c4b5fd&quot; offset=&quot;1&quot;/></linearGradient></defs><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;url(%23g)&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;28&quot; fill=&quot;%235b21b6&quot; font-weight=&quot;700&quot;>Tiket Festival Tari</text></svg>';">
+            <div class="desc">
+              <h3>Festival Tari Hardiknas</h3>
+              <p>Festival Hardiknas adalah acara kreatif dan edukatif untuk memperingati Hari Pendidikan Nasional dengan berbagai kegiatan seni.</p>
+              <div class="btns">
+                <button class="btn primary" data-action="buy" data-id="hardiknas-tari">Beli Tiket</button>
+                <button class="btn ghost" data-action="detail" data-id="hardiknas-tari">Detail Event</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="gallery">
+            <img class="photo" src="assets/tari-foto-1.jpg" alt="Foto kegiatan tari 1"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;500&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23f5f3ff&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;22&quot; fill=&quot;%237c3aed&quot; font-weight=&quot;700&quot;>Foto Tari 1</text></svg>';">
+            <img class="photo" src="assets/tari-foto-2.jpg" alt="Foto kegiatan tari 2"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;500&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23f5f3ff&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;22&quot; fill=&quot;%237c3aed&quot; font-weight=&quot;700&quot;>Foto Tari 2</text></svg>';">
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="event" data-category="Musik" data-id="konser-malam">
+      <div class="event-grid">
+        <div class="left">
+          <div class="ticket-wrap">
+            <img class="ticket-img" src="/img/tiket.png" alt="Tiket Konser Malam Kampus"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;1.0&quot; width=&quot;800&quot; height=&quot;420&quot;><defs><linearGradient id=&quot;g&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;1&quot; y2=&quot;1&quot;><stop stop-color=&quot;%23dbeafe&quot; offset=&quot;0&quot;/><stop stop-color=&quot;%2393c5fd&quot; offset=&quot;1&quot;/></linearGradient></defs><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;url(%23g)&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;28&quot; fill=&quot;%231e3a8a&quot; font-weight=&quot;700&quot;>Tiket Konser Musik</text></svg>';">
+            <div class="desc">
+              <h3>Konser Malam Kampus</h3>
+              <p>Pentas musik kolaboratif mahasiswa dengan berbagai genre dan bintang tamu lokal.</p>
+              <div class="btns">
+                <button class="btn primary" data-action="buy" data-id="konser-malam">Beli Tiket</button>
+                <button class="btn ghost" data-action="detail" data-id="konser-malam">Detail Event</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="gallery">
+            <img class="photo" src="assets/musik-foto-1.jpg" alt="Foto konser 1"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;500&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23eff6ff&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;22&quot; fill=&quot;%232563eb&quot; font-weight=&quot;700&quot;>Foto Musik 1</text></svg>';">
+            <img class="photo" src="assets/musik-foto-2.jpg" alt="Foto konser 2"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;500&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23eff6ff&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;22&quot; fill=&quot;%232563eb&quot; font-weight=&quot;700&quot;>Foto Musik 2</text></svg>';">
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="event" data-category="Teater" data-id="teater-aksara">
+      <div class="event-grid">
+        <div class="left">
+          <div class="ticket-wrap">
+            <img class="ticket-img" src="/img/tiket.png" alt="Tiket Teater Aksara"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;420&quot;><defs><linearGradient id=&quot;g&quot; x1=&quot;0&quot; y1=&quot;0&quot; x2=&quot;1&quot; y2=&quot;1&quot;><stop stop-color=&quot;%23fde68a&quot; offset=&quot;0&quot;/><stop stop-color=&quot;%23f59e0b&quot; offset=&quot;1&quot;/></linearGradient></defs><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;url(%23g)&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;28&quot; fill=&quot;%237b341e&quot; font-weight=&quot;700&quot;>Tiket Teater</text></svg>';">
+            <div class="desc">
+              <h3>Teater Aksara</h3>
+              <p>Pementasan teater bertema budaya dan literasi dengan kolaborasi antarsekolah.</p>
+              <div class="btns">
+                <button class="btn primary" data-action="buy" data-id="teater-aksara">Beli Tiket</button>
+                <button class="btn ghost" data-action="detail" data-id="teater-aksara">Detail Event</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="gallery">
+            <img class="photo" src="assets/teater-foto-1.jpg" alt="Foto teater 1"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;500&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23fff7ed&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;22&quot; fill=&quot;%23a16207&quot; font-weight=&quot;700&quot;>Foto Teater 1</text></svg>';">
+            <img class="photo" src="assets/teater-foto-2.jpg" alt="Foto teater 2"
+                 onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<?xml version=&quot;1.0&quot;?><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;800&quot; height=&quot;500&quot;><rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;%23fff7ed&quot;/><text x=&quot;50%&quot; y=&quot;52%&quot; dominant-baseline=&quot;middle&quot; text-anchor=&quot;middle&quot; font-family=&quot;Segoe UI, Roboto, Arial&quot; font-size=&quot;22&quot; fill=&quot;%23a16207&quot; font-weight=&quot;pbold&quot;>Foto Teater 2</text></svg>';">
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
   <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="backdrop" data-close></div>
     <div class="dialog" role="document">
@@ -696,7 +1415,6 @@
   </div>
 
   <script>
-    // Data event
     const EVENTS = {
       "hardiknas-tari": {
         title: "Festival Tari Hardiknas",
@@ -742,7 +1460,6 @@
       }
     };
 
-    // Tabs filter
     const tabs = document.querySelectorAll(".tab");
     const events = document.querySelectorAll(".event");
     tabs.forEach(t => t.addEventListener("click", () => {
@@ -755,7 +1472,6 @@
       });
     }));
 
-    // Modal logic
     const modal = document.getElementById("modal");
     const titleEl = document.getElementById("modal-title");
     const dateEl = document.getElementById("modal-date");
